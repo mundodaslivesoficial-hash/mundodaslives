@@ -514,10 +514,38 @@
 </div>
 
 <script>
+  // ── ENTREGÁVEIS PADRÃO ──
+  const DEFAULT_TASKS = [
+    { id: 101, title: 'Proposta comercial para marcas', desc: 'PDF/apresentação — serviços, fotos estúdio, método de trabalho, pacotes e preços', tag: 'cli', date: '', col: 'todo' },
+    { id: 102, title: 'Programa de treinamento de Creators', desc: 'Módulos: operação do estúdio, como fazer live shop, uso do roteiro, postura em câmera, CTA e fechamento', tag: 'op', date: '', col: 'todo' },
+    { id: 103, title: 'Checklist de chegada do Creator ao estúdio', desc: 'Itens a trazer, horário de chegada, preparação de equipamentos e ensaio de 15 min', tag: 'op', date: '', col: 'todo' },
+    { id: 104, title: 'Documento de público-alvo', desc: 'Perfil de marcas ideais, segmentos prioritários, critérios de qualificação', tag: 'mkt', date: '', col: 'todo' },
+    { id: 105, title: 'Contrato jurídico — cliente final', desc: 'Documento jurídico de contrato com o cliente final', tag: 'cli', date: '', col: 'todo' },
+    { id: 106, title: 'Contrato padrão de Creator', desc: 'Doc jurídico — remuneração, comissão por GMV, exclusividade, entregas mínimas e cláusulas', tag: 'op', date: '', col: 'todo' },
+    { id: 107, title: 'Relatório de auditoria do espaço físico', desc: 'Layout, acústica, iluminação, pontos elétricos e rede', tag: 'op', date: '', col: 'todo' },
+    { id: 108, title: 'Documento técnico de integrações', desc: 'PDF — passo a passo para replicar o setup com novos clientes', tag: 'op', date: '', col: 'todo' },
+    { id: 109, title: 'Lista de compras de equipamentos', desc: 'Aprovada e orçada — câmera, ring light, microfone, switcher, tripé', tag: 'op', date: '', col: 'todo' },
+    { id: 110, title: 'Live piloto executada', desc: 'Gravação completa arquivada, GMV registrado', tag: 'op', date: '', col: 'todo' },
+    { id: 111, title: 'Template de pré-briefing de live shopping', desc: 'Formulário que o Creator preenche com dados dos produtos do cliente (nome, preço, diferencial, estoque, promoção)', tag: 'op', date: '', col: 'todo' },
+    { id: 112, title: 'Template de roteiro padrão de live shop', desc: 'Aquecimento (antes), apresentação da oferta, chamada para ação (CTA), fechamento e próximo produto', tag: 'op', date: '', col: 'todo' },
+    { id: 113, title: 'Checklist de pré-live (30 min antes)', desc: 'Produtos fisicamente no estúdio, link da live ativo, estoque confirmado, equipamentos testados, roteiro impresso', tag: 'op', date: '', col: 'todo' },
+    { id: 114, title: 'Kit de briefing antecipado do produto para Creator', desc: 'Documento enviado 3 dias antes da live com info do produto, público-alvo, pontos de venda e demos', tag: 'op', date: '', col: 'todo' },
+    { id: 115, title: 'Dashboard de métricas mensais por cliente', desc: 'GMV, lives realizadas, ROI, crescimento de seguidores', tag: 'fin', date: '', col: 'todo' },
+    { id: 116, title: 'Banco de Creators mapeados', desc: 'Planilha com nome, nicho, seguidores, contato, status de negociação', tag: 'mkt', date: '', col: 'todo' },
+  ]
+
   // ── DATA ──
-  let tasks    = JSON.parse(localStorage.getItem('mdl_tasks')    || '[]')
-  let lives    = JSON.parse(localStorage.getItem('mdl_lives')    || '[]')
-  let clientes = JSON.parse(localStorage.getItem('mdl_clientes') || '[]')
+  let tasks, lives, clientes
+  if (!localStorage.getItem('mdl_v2')) {
+    tasks    = DEFAULT_TASKS
+    lives    = []
+    clientes = []
+    localStorage.setItem('mdl_v2', '1')
+  } else {
+    tasks    = JSON.parse(localStorage.getItem('mdl_tasks')    || '[]')
+    lives    = JSON.parse(localStorage.getItem('mdl_lives')    || '[]')
+    clientes = JSON.parse(localStorage.getItem('mdl_clientes') || '[]')
+  }
 
   function save() {
     localStorage.setItem('mdl_tasks', JSON.stringify(tasks))
