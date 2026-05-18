@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mundo das Lives – Gestão do Projeto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:   #FF1F8C;
+      --pink-d: #CC0A6E;
+      --cyan:   #00C8FF;
+      --cyan-d: #009FCC;
+      --grad:   linear-gradient(135deg, #FF1F8C, #00C8FF);
+      --dark:   #06060E;
+      --dark2:  #0D0D1A;
+      --dark3:  #141425;
+      --dark4:  #1A1A30;
+      --border: rgba(255,255,255,0.08);
+      --border-p: rgba(255,31,140,0.25);
+      --border-c: rgba(0,200,255,0.25);
+      --text:   #E8E8F4;
+      --muted:  #8080A0;
+      --white:  #FFFFFF;
+      --green:  #00E096;
+      --yellow: #FFD600;
+      --red:    #FF4D6D;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(6,6,14,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo span { font-size: 1.1rem; font-weight: 800; color: var(--white); }
+    .nav-logo .dot { color: var(--pink); }
+    .nav-badge {
+      background: var(--grad); color: #fff;
+      font-size: .6rem; font-weight: 700; letter-spacing: .05em;
+      padding: 2px 7px; border-radius: 4px; text-transform: uppercase;
+    }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-back {
+      color: var(--muted); font-size: .8rem; font-weight: 500;
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-back:hover { color: var(--white); }
+    .nav-date { font-size: .75rem; color: var(--muted); }
+
+    /* ── LAYOUT ── */
+    .main { padding: 90px 32px 48px; max-width: 1400px; margin: 0 auto; }
+
+    .page-header { margin-bottom: 32px; }
+    .page-header h1 { font-size: 1.75rem; font-weight: 800; color: var(--white); }
+    .page-header p { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: var(--dark2); border-radius: 10px; padding: 4px; width: fit-content; }
+    .tab-btn {
+      padding: 8px 20px; border-radius: 7px; border: none; background: transparent;
+      color: var(--muted); font-size: .85rem; font-weight: 600; cursor: pointer; transition: all .2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab-btn.active { background: var(--dark3); color: var(--white); }
+    .tab-btn:hover:not(.active) { color: var(--text); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── METRIC CARDS ── */
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .metric-card {
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px;
+    }
+    .metric-card.pink { border-color: var(--border-p); }
+    .metric-card.cyan { border-color: var(--border-c); }
+    .metric-label { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+    .metric-value { font-size: 2rem; font-weight: 800; color: var(--white); line-height: 1; }
+    .metric-value.grad { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .metric-sub { font-size: .75rem; color: var(--muted); margin-top: 6px; }
+
+    /* ── KANBAN ── */
+    .kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .kanban-col {
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px; min-height: 400px;
+    }
+    .kanban-col-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .kanban-col-title { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .kanban-col-title.todo { color: var(--muted); }
+    .kanban-col-title.doing { color: var(--cyan); }
+    .kanban-col-title.done { color: var(--green); }
+    .col-count {
+      font-size: .72rem; font-weight: 700; background: var(--dark3);
+      color: var(--muted); padding: 2px 8px; border-radius: 20px;
+    }
+    .add-task-btn {
+      width: 100%; background: transparent; border: 1px dashed var(--border);
+      border-radius: 8px; padding: 8px; color: var(--muted); font-size: .8rem;
+      font-family: 'Inter', sans-serif; cursor: pointer; transition: all .2s; margin-top: 10px;
+    }
+    .add-task-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* ── TASK CARD ── */
+    .task-card {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px; margin-bottom: 10px;
+      cursor: grab; transition: border-color .2s, transform .15s;
+      position: relative;
+    }
+    .task-card:hover { border-color: rgba(255,255,255,0.18); }
+    .task-card.dragging { opacity: .5; transform: scale(.98); }
+    .task-card.drag-over { border-color: var(--pink); background: rgba(255,31,140,.05); }
+    .task-tag {
+      display: inline-block; font-size: .65rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+      letter-spacing: .04em; margin-bottom: 8px;
+    }
+    .tag-op { background: rgba(0,200,255,.15); color: var(--cyan); }
+    .tag-cli { background: rgba(255,31,140,.15); color: var(--pink); }
+    .tag-mkt { background: rgba(255,214,0,.15); color: var(--yellow); }
+    .tag-fin { background: rgba(0,224,150,.15); color: var(--green); }
+    .task-title { font-size: .875rem; font-weight: 600; color: var(--white); margin-bottom: 6px; line-height: 1.3; }
+    .task-desc { font-size: .75rem; color: var(--muted); line-height: 1.4; margin-bottom: 10px; }
+    .task-footer { display: flex; align-items: center; justify-content: space-between; }
+    .task-date { font-size: .7rem; color: var(--muted); }
+    .task-actions { display: flex; gap: 6px; }
+    .task-btn {
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      font-size: .75rem; transition: color .2s; padding: 2px 4px;
+    }
+    .task-btn:hover { color: var(--white); }
+    .task-btn.del:hover { color: var(--red); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      z-index: 200; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; width: 100%; max-width: 480px;
+      margin: 16px;
+    }
+    .modal h3 { font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 20px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: .75rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px; color: var(--text); font-family: 'Inter', sans-serif; font-size: .875rem;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none; border-color: var(--pink);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group select option { background: var(--dark2); }
+    .modal-btns { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .btn-cancel {
+      background: transparent; border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 20px; color: var(--muted); font-family: 'Inter', sans-serif; font-size: .85rem;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-cancel:hover { border-color: rgba(255,255,255,.2); color: var(--text); }
+    .btn-save {
+      background: var(--grad); border: none; border-radius: 8px;
+      padding: 9px 24px; color: #fff; font-family: 'Inter', sans-serif; font-size: .85rem;
+      font-weight: 700; cursor: pointer; transition: opacity .2s;
+    }
+    .btn-save:hover { opacity: .88; }
+
+    /* ── AGENDA ── */
+    .agenda-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .agenda-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--white); }
+    .btn-add {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--grad); border: none; border-radius: 8px;
+      padding: 9px 18px; color: #fff; font-family: 'Inter', sans-serif;
+      font-size: .8rem; font-weight: 700; cursor: pointer; transition: opacity .2s;
+    }
+    .btn-add:hover { opacity: .88; }
+
+    .lives-list { display: flex; flex-direction: column; gap: 12px; }
+    .live-card {
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .live-date-box {
+      background: var(--dark3); border-radius: 10px; padding: 10px 14px;
+      text-align: center; min-width: 60px; flex-shrink: 0;
+    }
+    .live-day { font-size: 1.4rem; font-weight: 800; color: var(--white); line-height: 1; }
+    .live-mon { font-size: .65rem; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+    .live-info { flex: 1; min-width: 0; }
+    .live-client { font-size: .95rem; font-weight: 700; color: var(--white); }
+    .live-meta { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .live-status {
+      font-size: .7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .04em; flex-shrink: 0;
+    }
+    .status-ag { background: rgba(0,200,255,.15); color: var(--cyan); }
+    .status-ok { background: rgba(0,224,150,.15); color: var(--green); }
+    .status-and { background: rgba(255,31,140,.15); color: var(--pink); }
+    .live-del { background: none; border: none; color: var(--muted); cursor: pointer; transition: color .2s; font-size: .8rem; }
+    .live-del:hover { color: var(--red); }
+
+    /* ── CLIENTES ── */
+    .clientes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .cliente-card {
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px;
+    }
+    .cliente-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--grad); display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 12px;
+    }
+    .cliente-nome { font-size: 1rem; font-weight: 700; color: var(--white); }
+    .cliente-seg { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .cliente-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .cliente-tag {
+      font-size: .65rem; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+      background: var(--dark3); color: var(--muted);
+    }
+    .cliente-status-dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px;
+    }
+    .dot-on { background: var(--green); }
+    .dot-off { background: var(--muted); }
+    .cliente-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .cliente-lives { font-size: .75rem; color: var(--muted); }
+    .cliente-lives strong { color: var(--cyan); }
+
+    /* ── MÉTRICAS ── */
+    .metrics-section h2 { font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 20px; }
+    .metrics-big { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .metric-big-card {
+      background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+    }
+    .metric-big-card.pink-border { border-color: var(--border-p); }
+    .metric-big-card.cyan-border { border-color: var(--border-c); }
+    .mbig-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
+    .mbig-val { font-size: 2.5rem; font-weight: 800; color: var(--white); line-height: 1; }
+    .mbig-val.pink-grad { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .mbig-delta { font-size: .75rem; margin-top: 6px; }
+    .delta-up { color: var(--green); }
+    .delta-dn { color: var(--red); }
+    .progress-bar { height: 4px; background: var(--dark3); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--grad); border-radius: 2px; }
+
+    /* ── EMPTY STATE ── */
+    .empty { text-align: center; padding: 48px 24px; color: var(--muted); font-size: .85rem; }
+    .empty svg { margin-bottom: 12px; opacity: .4; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .kanban { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      nav { padding: 14px 20px; }
+      .main { padding: 80px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span>Mundo das Lives<span class="dot">.</span></span>
+    <span class="nav-badge">Gestão</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Site</a>
+    <span class="nav-date" id="navDate"></span>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <h1>Painel de Gestão</h1>
+    <p>Controle de tarefas, agenda de lives e clientes ativos</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="setTab('kanban')">Tarefas</button>
+    <button class="tab-btn" onclick="setTab('agenda')">Agenda de Lives</button>
+    <button class="tab-btn" onclick="setTab('clientes')">Clientes</button>
+    <button class="tab-btn" onclick="setTab('metricas')">Métricas</button>
+  </div>
+
+  <!-- ── TAB: KANBAN ── -->
+  <div class="tab-pane active" id="tab-kanban">
+    <div class="metrics">
+      <div class="metric-card pink">
+        <div class="metric-label">A Fazer</div>
+        <div class="metric-value" id="m-todo">0</div>
+        <div class="metric-sub">tarefas pendentes</div>
+      </div>
+      <div class="metric-card cyan">
+        <div class="metric-label">Em Andamento</div>
+        <div class="metric-value" id="m-doing">0</div>
+        <div class="metric-sub">em execução</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Concluídas</div>
+        <div class="metric-value grad" id="m-done">0</div>
+        <div class="metric-sub">finalizadas</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total</div>
+        <div class="metric-value" id="m-total">0</div>
+        <div class="metric-sub">no projeto</div>
+      </div>
+    </div>
+
+    <div class="kanban">
+      <div class="kanban-col" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title todo">A Fazer</span>
+          <span class="col-count" id="cnt-todo">0</span>
+        </div>
+        <div id="tasks-todo"></div>
+        <button class="add-task-btn" onclick="openModal('todo')">+ Adicionar tarefa</button>
+      </div>
+
+      <div class="kanban-col" id="col-doing" ondragover="onDragOver(event)" ondrop="onDrop(event,'doing')">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title doing">Em Andamento</span>
+          <span class="col-count" id="cnt-doing">0</span>
+        </div>
+        <div id="tasks-doing"></div>
+        <button class="add-task-btn" onclick="openModal('doing')">+ Adicionar tarefa</button>
+      </div>
+
+      <div class="kanban-col" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title done">Concluído</span>
+          <span class="col-count" id="cnt-done">0</span>
+        </div>
+        <div id="tasks-done"></div>
+        <button class="add-task-btn" onclick="openModal('done')">+ Adicionar tarefa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: AGENDA ── -->
+  <div class="tab-pane" id="tab-agenda">
+    <div class="agenda-header">
+      <h2>Lives Agendadas</h2>
+      <button class="btn-add" onclick="openLiveModal()">+ Nova Live</button>
+    </div>
+    <div class="lives-list" id="lives-list">
+      <div class="empty">Nenhuma live agendada ainda.</div>
+    </div>
+  </div>
+
+  <!-- ── TAB: CLIENTES ── -->
+  <div class="tab-pane" id="tab-clientes">
+    <div class="agenda-header">
+      <h2>Clientes Ativos</h2>
+      <button class="btn-add" onclick="openClienteModal()">+ Novo Cliente</button>
+    </div>
+    <div class="clientes-grid" id="clientes-grid">
+      <div class="empty">Nenhum cliente cadastrado.</div>
+    </div>
+  </div>
+
+  <!-- ── TAB: MÉTRICAS ── -->
+  <div class="tab-pane" id="tab-metricas">
+    <div class="metrics-section">
+      <h2>Visão Geral do Negócio</h2>
+      <div class="metrics-big">
+        <div class="metric-big-card pink-border">
+          <div class="mbig-label">Clientes Ativos</div>
+          <div class="mbig-val pink-grad" id="met-clientes">0</div>
+          <div class="progress-bar"><div class="progress-fill" id="pb-clientes" style="width:0%"></div></div>
+        </div>
+        <div class="metric-big-card cyan-border">
+          <div class="mbig-label">Lives Realizadas</div>
+          <div class="mbig-val" id="met-lives">0</div>
+          <div class="mbig-delta" id="met-lives-sub"></div>
+        </div>
+        <div class="metric-big-card">
+          <div class="mbig-label">Tarefas Concluídas</div>
+          <div class="mbig-val" id="met-tasks">0</div>
+          <div class="mbig-delta delta-up" id="met-tasks-pct"></div>
+        </div>
+        <div class="metric-big-card">
+          <div class="mbig-label">Lives Agendadas</div>
+          <div class="mbig-val" id="met-ag">0</div>
+          <div class="mbig-delta">próximas lives</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL TAREFA ── -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <h3>Nova Tarefa</h3>
+    <div class="form-group">
+      <label>Título *</label>
+      <input type="text" id="task-title" placeholder="Ex: Confirmar cabine com cliente" />
+    </div>
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea id="task-desc" placeholder="Detalhes da tarefa..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Categoria</label>
+      <select id="task-tag">
+        <option value="op">Operacional</option>
+        <option value="cli">Cliente</option>
+        <option value="mkt">Marketing</option>
+        <option value="fin">Financeiro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Data limite</label>
+      <input type="date" id="task-date" />
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('task-modal')">Cancelar</button>
+      <button class="btn-save" onclick="saveTask()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL LIVE ── -->
+<div class="modal-overlay" id="live-modal">
+  <div class="modal">
+    <h3>Nova Live</h3>
+    <div class="form-group">
+      <label>Cliente *</label>
+      <input type="text" id="live-cliente" placeholder="Nome do cliente/marca" />
+    </div>
+    <div class="form-group">
+      <label>Data *</label>
+      <input type="date" id="live-data" />
+    </div>
+    <div class="form-group">
+      <label>Horário</label>
+      <input type="time" id="live-hora" value="19:00" />
+    </div>
+    <div class="form-group">
+      <label>Creator / Apresentador</label>
+      <input type="text" id="live-creator" placeholder="Nome do creator" />
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="live-status">
+        <option value="ag">Agendada</option>
+        <option value="and">Em Andamento</option>
+        <option value="ok">Realizada</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('live-modal')">Cancelar</button>
+      <button class="btn-save" onclick="saveLive()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL CLIENTE ── -->
+<div class="modal-overlay" id="cliente-modal">
+  <div class="modal">
+    <h3>Novo Cliente</h3>
+    <div class="form-group">
+      <label>Nome / Marca *</label>
+      <input type="text" id="cli-nome" placeholder="Ex: Marca X" />
+    </div>
+    <div class="form-group">
+      <label>Segmento</label>
+      <input type="text" id="cli-seg" placeholder="Ex: Moda, Beleza, Alimentação..." />
+    </div>
+    <div class="form-group">
+      <label>Contato</label>
+      <input type="text" id="cli-contato" placeholder="WhatsApp ou e-mail" />
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="cli-status">
+        <option value="on">Ativo</option>
+        <option value="off">Inativo</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('cliente-modal')">Cancelar</button>
+      <button class="btn-save" onclick="saveCliente()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── DATA ──
+  let tasks    = JSON.parse(localStorage.getItem('mdl_tasks')    || '[]')
+  let lives    = JSON.parse(localStorage.getItem('mdl_lives')    || '[]')
+  let clientes = JSON.parse(localStorage.getItem('mdl_clientes') || '[]')
+
+  function save() {
+    localStorage.setItem('mdl_tasks', JSON.stringify(tasks))
+    localStorage.setItem('mdl_lives', JSON.stringify(lives))
+    localStorage.setItem('mdl_clientes', JSON.stringify(clientes))
+  }
+
+  // ── TABS ──
+  function setTab(name) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+    document.getElementById('tab-' + name).classList.add('active')
+    event.target.classList.add('active')
+    if (name === 'metricas') renderMetricas()
+  }
+
+  // ── MODAL ──
+  let currentCol = 'todo'
+  function openModal(col) { currentCol = col; document.getElementById('task-modal').classList.add('open') }
+  function openLiveModal()    { document.getElementById('live-modal').classList.add('open') }
+  function openClienteModal() { document.getElementById('cliente-modal').classList.add('open') }
+  function closeModal(id) { document.getElementById(id).classList.remove('open') }
+
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open') })
+  })
+
+  // ── TASKS ──
+  const tagClass  = { op: 'tag-op', cli: 'tag-cli', mkt: 'tag-mkt', fin: 'tag-fin' }
+  const tagLabel  = { op: 'Operacional', cli: 'Cliente', mkt: 'Marketing', fin: 'Financeiro' }
+  const colLabels = { todo: 'A Fazer', doing: 'Em Andamento', done: 'Concluído' }
+
+  function saveTask() {
+    const title = document.getElementById('task-title').value.trim()
+    if (!title) return
+    tasks.push({
+      id: Date.now(),
+      title,
+      desc: document.getElementById('task-desc').value.trim(),
+      tag: document.getElementById('task-tag').value,
+      date: document.getElementById('task-date').value,
+      col: currentCol,
+    })
+    save(); renderTasks(); closeModal('task-modal')
+    document.getElementById('task-title').value = ''
+    document.getElementById('task-desc').value = ''
+    document.getElementById('task-date').value = ''
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id); save(); renderTasks()
+  }
+
+  function moveTask(id, col) {
+    const t = tasks.find(t => t.id === id)
+    if (t) { t.col = col; save(); renderTasks() }
+  }
+
+  function renderTasks() {
+    ['todo','doing','done'].forEach(col => {
+      const colTasks = tasks.filter(t => t.col === col)
+      const el = document.getElementById('tasks-' + col)
+      document.getElementById('cnt-' + col).textContent = colTasks.length
+      if (colTasks.length === 0) { el.innerHTML = ''; return }
+      el.innerHTML = colTasks.map(t => `
+        <div class="task-card" draggable="true"
+          ondragstart="onDragStart(event,${t.id})"
+          ondragover="onDragOver(event)"
+          ondrop="onDrop(event,'${col}')">
+          <span class="task-tag ${tagClass[t.tag]}">${tagLabel[t.tag]}</span>
+          <p class="task-title">${t.title}</p>
+          ${t.desc ? `<p class="task-desc">${t.desc}</p>` : ''}
+          <div class="task-footer">
+            <span class="task-date">${t.date ? fmtDate(t.date) : ''}</span>
+            <div class="task-actions">
+              ${col !== 'todo'   ? `<button class="task-btn" onclick="moveTask(${t.id},'todo')"  title="A Fazer">←</button>` : ''}
+              ${col !== 'doing'  ? `<button class="task-btn" onclick="moveTask(${t.id},'doing')" title="Em Andamento">↕</button>` : ''}
+              ${col !== 'done'   ? `<button class="task-btn" onclick="moveTask(${t.id},'done')"  title="Concluído">✓</button>` : ''}
+              <button class="task-btn del" onclick="deleteTask(${t.id})" title="Excluir">✕</button>
+            </div>
+          </div>
+        </div>
+      `).join('')
+    })
+
+    const todo = tasks.filter(t => t.col === 'todo').length
+    const doing = tasks.filter(t => t.col === 'doing').length
+    const done = tasks.filter(t => t.col === 'done').length
+    document.getElementById('m-todo').textContent  = todo
+    document.getElementById('m-doing').textContent = doing
+    document.getElementById('m-done').textContent  = done
+    document.getElementById('m-total').textContent = tasks.length
+  }
+
+  // ── DRAG & DROP ──
+  let dragId = null
+  function onDragStart(e, id) { dragId = id; e.dataTransfer.effectAllowed = 'move' }
+  function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move' }
+  function onDrop(e, col) {
+    e.preventDefault()
+    if (dragId === null) return
+    moveTask(dragId, col); dragId = null
+  }
+
+  // ── LIVES ──
+  const statusClass = { ag: 'status-ag', ok: 'status-ok', and: 'status-and' }
+  const statusLabel = { ag: 'Agendada', ok: 'Realizada', and: 'Ao Vivo' }
+  const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+
+  function saveLive() {
+    const cliente = document.getElementById('live-cliente').value.trim()
+    const data    = document.getElementById('live-data').value
+    if (!cliente || !data) return
+    lives.push({
+      id: Date.now(),
+      cliente,
+      data,
+      hora:    document.getElementById('live-hora').value,
+      creator: document.getElementById('live-creator').value.trim(),
+      status:  document.getElementById('live-status').value,
+    })
+    lives.sort((a, b) => a.data.localeCompare(b.data))
+    save(); renderLives(); closeModal('live-modal')
+    document.getElementById('live-cliente').value = ''
+    document.getElementById('live-creator').value = ''
+  }
+
+  function deleteLive(id) { lives = lives.filter(l => l.id !== id); save(); renderLives() }
+
+  function renderLives() {
+    const el = document.getElementById('lives-list')
+    if (lives.length === 0) { el.innerHTML = '<div class="empty">Nenhuma live agendada ainda.</div>'; return }
+    el.innerHTML = lives.map(l => {
+      const d = new Date(l.data + 'T12:00:00')
+      return `
+        <div class="live-card">
+          <div class="live-date-box">
+            <div class="live-day">${String(d.getDate()).padStart(2,'0')}</div>
+            <div class="live-mon">${MESES[d.getMonth()]}</div>
+          </div>
+          <div class="live-info">
+            <div class="live-client">${l.cliente}</div>
+            <div class="live-meta">${l.hora ? l.hora + 'h' : ''}${l.creator ? ' · ' + l.creator : ''}</div>
+          </div>
+          <span class="live-status ${statusClass[l.status]}">${statusLabel[l.status]}</span>
+          <button class="live-del" onclick="deleteLive(${l.id})">✕</button>
+        </div>
+      `
+    }).join('')
+  }
+
+  // ── CLIENTES ──
+  function saveCliente() {
+    const nome = document.getElementById('cli-nome').value.trim()
+    if (!nome) return
+    clientes.push({
+      id: Date.now(),
+      nome,
+      seg:     document.getElementById('cli-seg').value.trim(),
+      contato: document.getElementById('cli-contato').value.trim(),
+      status:  document.getElementById('cli-status').value,
+      lives:   0,
+    })
+    save(); renderClientes(); closeModal('cliente-modal')
+    document.getElementById('cli-nome').value = ''
+    document.getElementById('cli-seg').value = ''
+    document.getElementById('cli-contato').value = ''
+  }
+
+  function deleteCliente(id) { clientes = clientes.filter(c => c.id !== id); save(); renderClientes() }
+
+  function initials(n) { return n.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() }
+
+  function renderClientes() {
+    const el = document.getElementById('clientes-grid')
+    if (clientes.length === 0) { el.innerHTML = '<div class="empty">Nenhum cliente cadastrado.</div>'; return }
+    el.innerHTML = clientes.map(c => `
+      <div class="cliente-card">
+        <div class="cliente-avatar">${initials(c.nome)}</div>
+        <div class="cliente-nome">
+          <span class="cliente-status-dot ${c.status === 'on' ? 'dot-on' : 'dot-off'}"></span>${c.nome}
+        </div>
+        <div class="cliente-seg">${c.seg || 'Sem segmento'}</div>
+        <div class="cliente-tags">
+          ${c.contato ? `<span class="cliente-tag">${c.contato}</span>` : ''}
+          <span class="cliente-tag">${c.status === 'on' ? 'Ativo' : 'Inativo'}</span>
+        </div>
+        <div class="cliente-footer">
+          <div class="cliente-lives">Lives realizadas: <strong>${c.lives}</strong></div>
+          <button class="live-del" onclick="deleteCliente(${c.id})">✕</button>
+        </div>
+      </div>
+    `).join('')
+  }
+
+  // ── MÉTRICAS ──
+  function renderMetricas() {
+    const livesOk  = lives.filter(l => l.status === 'ok').length
+    const livesAg  = lives.filter(l => l.status === 'ag').length
+    const cliAtivo = clientes.filter(c => c.status === 'on').length
+    const taskDone = tasks.filter(t => t.col === 'done').length
+    const taskPct  = tasks.length ? Math.round(taskDone / tasks.length * 100) : 0
+    const cliMeta  = 10
+
+    document.getElementById('met-clientes').textContent  = cliAtivo
+    document.getElementById('met-lives').textContent     = livesOk
+    document.getElementById('met-lives-sub').textContent = livesOk > 0 ? `${livesOk} live${livesOk !== 1 ? 's' : ''} concluída${livesOk !== 1 ? 's' : ''}` : 'Nenhuma realizada ainda'
+    document.getElementById('met-tasks').textContent     = taskDone
+    document.getElementById('met-tasks-pct').textContent = tasks.length ? `${taskPct}% das tarefas concluídas` : ''
+    document.getElementById('met-ag').textContent        = livesAg
+    document.getElementById('pb-clientes').style.width   = Math.min(100, cliAtivo / cliMeta * 100) + '%'
+  }
+
+  // ── UTILS ──
+  function fmtDate(d) {
+    const [y,m,day] = d.split('-')
+    return `${day}/${m}/${y}`
+  }
+
+  // ── INIT ──
+  document.getElementById('navDate').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' })
+  renderTasks()
+  renderLives()
+  renderClientes()
+</script>
+</body>
+</html>
