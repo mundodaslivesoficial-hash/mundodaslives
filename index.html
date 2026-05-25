@@ -503,19 +503,52 @@
       align-items: center; margin-top: 56px;
     }
     .cabines-visual {
-      background: var(--dark3); border: 1px solid var(--border);
-      border-radius: 28px; padding: 48px; text-align: center;
-      position: relative; overflow: hidden;
+      border-radius: 28px; overflow: hidden;
+      position: relative; min-height: 480px;
+      border: 1px solid var(--border);
     }
-    .cabines-visual .big-icon { font-size: 5rem; margin-bottom: 16px; }
-    .cabines-visual h3 {
-      font-size: 1.4rem; font-weight: 800; color: var(--white); margin-bottom: 8px;
+    .cabines-visual img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; min-height: 480px;
     }
-    .cabines-visual p { font-size: .9rem; color: var(--muted); }
+    .cabines-visual .cab-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 32px 28px;
+      background: linear-gradient(to top, rgba(6,6,14,.92) 0%, transparent 100%);
+    }
+    .cabines-visual .cab-overlay h3 {
+      font-size: 1.3rem; font-weight: 800; color: var(--white); margin-bottom: 4px;
+    }
+    .cabines-visual .cab-overlay p { font-size: .88rem; color: var(--muted); }
     .cabines-visual .glow {
       position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
       width: 200px; height: 200px; border-radius: 50%;
-      background: rgba(232,0,29,.2); filter: blur(60px);
+      background: rgba(255,31,140,.2); filter: blur(60px);
+    }
+
+    /* ─── QUEM SOMOS ─── */
+    #quem-somos { background: var(--dark2); }
+    .quem-wrapper {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 72px; align-items: center; margin-top: 56px;
+    }
+    .quem-img {
+      border-radius: 28px; overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(255,31,140,.15);
+    }
+    .quem-img img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 420px; }
+    .quem-text .quem-stat-row {
+      display: flex; gap: 32px; margin-top: 36px; flex-wrap: wrap;
+    }
+    .quem-stat { text-align: center; }
+    .quem-stat .val {
+      font-size: 2.2rem; font-weight: 900; color: var(--white); display: block;
+    }
+    .quem-stat .val span { color: var(--pink); }
+    .quem-stat .lbl { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    @media (max-width: 900px) {
+      .quem-wrapper { grid-template-columns: 1fr; gap: 36px; }
     }
     .cabines-list { display: flex; flex-direction: column; gap: 20px; }
     .cabines-item {
@@ -818,6 +851,7 @@
     <li><a href="#como-funciona">Como Funciona</a></li>
     <li><a href="#servicos">Serviços</a></li>
     <li><a href="#cabines">Cabines</a></li>
+    <li><a href="#quem-somos">Quem Somos</a></li>
     <li><a href="#para-quem">Para Quem</a></li>
   </ul>
   <a href="#" class="nav-cta" onclick="event.preventDefault();document.getElementById('contactModal').classList.add('open')">Quero Vender ao Vivo</a>
@@ -1175,9 +1209,11 @@
     </div>
     <div class="cabines-wrapper">
       <div class="cabines-visual reveal">
-        <div class="big-icon">🎥</div>
-        <h3>Cabine Mundo das Lives</h3>
-        <p>Estrutura profissional<br/>100% personalizada para sua marca</p>
+        <img src="images/cabines.jpeg" alt="Cabine Mundo das Lives" />
+        <div class="cab-overlay">
+          <h3>Cabine Mundo das Lives</h3>
+          <p>Estrutura profissional · 100% personalizada para sua marca</p>
+        </div>
         <div class="glow"></div>
       </div>
       <div class="cabines-list">
@@ -1207,6 +1243,47 @@
           <div>
             <h4>Tecnologia de Transmissão</h4>
             <p>Internet dedicada, câmeras de alta definição e integração direta com TikTok Shop, Instagram e YouTube.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUEM SOMOS -->
+<section id="quem-somos">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Quem Somos</span>
+      <h2 class="section-title">O estúdio que transforma<br/>marcas em referência no digital</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="quem-wrapper">
+      <div class="quem-img reveal">
+        <img src="images/empresa1.jpeg" alt="Equipe Mundo das Lives" />
+      </div>
+      <div class="quem-text reveal">
+        <p style="font-size:1.05rem; color:var(--muted); line-height:1.8; margin-bottom:20px;">
+          O <strong style="color:var(--white)">Mundo das Lives</strong> é um ecossistema completo de Live Shopping, criado para conectar marcas ao consumidor certo e transformar transmissões ao vivo em canal recorrente de vendas.
+        </p>
+        <p style="font-size:1.05rem; color:var(--muted); line-height:1.8; margin-bottom:20px;">
+          Com estrutura profissional de estúdio, time especializado em vendas ao vivo e estratégia integrada de marketplaces, atendemos marcas B2C e sellers que desejam escalar suas vendas no digital.
+        </p>
+        <p style="font-size:1.05rem; color:var(--muted); line-height:1.8;">
+          Somos <strong style="color:var(--white)">especialistas em marcas que vendem diretamente ao consumidor</strong> — do planejamento à transmissão, do conteúdo UGC ao treinamento de talentos.
+        </p>
+        <div class="quem-stat-row">
+          <div class="quem-stat">
+            <span class="val">+<span>1.000</span></span>
+            <span class="lbl">Alunos Formados</span>
+          </div>
+          <div class="quem-stat">
+            <span class="val">4<span>+</span></span>
+            <span class="lbl">Anos de Mercado</span>
+          </div>
+          <div class="quem-stat">
+            <span class="val"><span>100</span>%</span>
+            <span class="lbl">Full Service</span>
           </div>
         </div>
       </div>
