@@ -657,6 +657,78 @@
       .footer-links { justify-content: center; }
     }
 
+    /* ─── CARDS GRID 5 (flex centered) ─── */
+    .cards-grid-5 {
+      display: flex; flex-wrap: wrap; gap: 24px;
+      margin-top: 56px; justify-content: center;
+    }
+    .cards-grid-5 .card {
+      flex: 0 1 calc(33.333% - 16px); min-width: 280px;
+    }
+    @media (max-width: 900px) {
+      .cards-grid-5 .card { flex: 0 1 calc(50% - 12px); }
+    }
+    @media (max-width: 600px) {
+      .cards-grid-5 .card { flex: 0 1 100%; }
+    }
+
+    /* ─── LOJA AO VIVO ─── */
+    #loja-ao-vivo {
+      background: linear-gradient(135deg, var(--dark3) 0%, var(--dark2) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .loja-headline {
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 900; color: var(--white);
+      line-height: 1.15; letter-spacing: -.02em;
+      margin-top: 16px; margin-bottom: 24px;
+    }
+    .loja-headline .grad-text {
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(255,31,140,.4));
+    }
+
+    /* ─── CATEGORIES (Para Quem) ─── */
+    .categories-grid {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      justify-content: center; margin-top: 48px;
+    }
+    .cat-pill {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 100px; padding: 10px 22px;
+      font-size: .9rem; font-weight: 600; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+      transition: all .25s;
+      cursor: default;
+    }
+    .cat-pill:hover { border-color: rgba(255,31,140,.4); color: var(--white); background: rgba(255,31,140,.07); }
+    .cat-pill-more {
+      background: var(--grad); color: #fff; border-color: transparent;
+    }
+    .cat-pill-more:hover { opacity: .88; background: var(--grad); color: #fff; }
+
+    /* ─── ECOSYSTEM BOX ─── */
+    .ecosystem-box {
+      margin-top: 72px;
+      background: linear-gradient(135deg, rgba(255,31,140,.07), rgba(0,200,255,.05));
+      border: 1px solid var(--border-p);
+      border-radius: 24px; padding: 56px 40px;
+      text-align: center;
+    }
+    .ecosystem-box .eco-text {
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 800; color: var(--white); line-height: 1.4;
+    }
+    .ecosystem-box .eco-text em {
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; font-style: normal;
+    }
+
     /* ─── WHATSAPP FLOAT ─── */
     .wpp-float {
       position: fixed; bottom: 32px; right: 32px; z-index: 200;
@@ -933,46 +1005,84 @@
 <section id="servicos">
   <div class="container">
     <div class="reveal">
-      <span class="section-tag">Nossos Serviços</span>
-      <h2 class="section-title">Três pilares para vender mais ao vivo</h2>
+      <span class="section-tag">Nossas Soluções</span>
+      <h2 class="section-title">Estrutura completa para<br/>vender mais ao vivo</h2>
       <div class="divider"></div>
-      <p class="section-sub">Tudo que você precisa para transformar suas lives em uma máquina de vendas.</p>
+      <p class="section-sub">Possuímos estrutura para produzir diversos formatos e gêneros de conteúdo. Especialistas em marcas que vendem diretamente ao consumidor no digital.</p>
     </div>
-    <div class="cards-grid">
-      <div class="card reveal">
-        <div class="card-icon">🎬</div>
-        <h3>Estúdio Profissional</h3>
-        <p>Cabines personalizadas com identidade da sua marca, iluminação cinematográfica e estrutura técnica de alta qualidade para transmissões impactantes.</p>
-        <ul class="features">
-          <li>Cabine com identidade visual da marca</li>
-          <li>Iluminação e setup técnico profissional</li>
-          <li>Estrutura para múltiplas plataformas</li>
-          <li>Espaço para exposição de produtos</li>
-        </ul>
-      </div>
+    <div class="cards-grid-5">
       <div class="card featured reveal">
-        <div class="card-badge">⭐ Principal</div>
-        <div class="card-icon">🎭</div>
-        <h3>Creators Especializados</h3>
-        <p>Profissionais treinados em Live Shopping com experiência em vendas, engajamento e conversão. Vendem por você com naturalidade e autoridade.</p>
+        <div class="card-badge">⭐ Core</div>
+        <div class="card-icon">📡</div>
+        <h3>Implementação & Gestão de LIVE</h3>
+        <p>Operação completa das suas lives: da estratégia à transmissão. Cuidamos de tudo para você focar no produto.</p>
         <ul class="features">
-          <li>Creators com domínio em vendas ao vivo</li>
-          <li>Roteiro e apresentação estratégica</li>
-          <li>Gestão de perguntas e audiência</li>
-          <li>Treinamento específico para seu nicho</li>
-        </ul>
-      </div>
-      <div class="card reveal">
-        <div class="card-icon">📊</div>
-        <h3>Estratégia & Gestão</h3>
-        <p>Planejamento completo de conteúdo, precificação, calendário de lives, tráfego pago e análise de performance para maximizar resultados.</p>
-        <ul class="features">
-          <li>Planejamento estratégico mensal</li>
-          <li>Gestão de tráfego pago para lives</li>
-          <li>Integração TikTok Shop + Bling</li>
+          <li>Planejamento e calendário de lives</li>
+          <li>Roteiro e gestão de audiência</li>
+          <li>Transmissão técnica profissional</li>
           <li>Relatórios de performance</li>
         </ul>
       </div>
+      <div class="card reveal">
+        <div class="card-icon">🛒</div>
+        <h3>Gestão de Marketplaces</h3>
+        <p>Gestão integrada nos principais marketplaces, potencializando suas vendas em múltiplos canais ao mesmo tempo.</p>
+        <ul class="features">
+          <li>TikTok Shop, Shopee, Mercado Livre</li>
+          <li>Otimização de listings e catálogo</li>
+          <li>Gestão de pedidos e estoque</li>
+          <li>Integração com sistemas ERP</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">🎥</div>
+        <h3>Conteúdo UGC & Afiliados</h3>
+        <p>Produção de conteúdo autêntico com criadores e rede de afiliados para amplificar o alcance da sua marca.</p>
+        <ul class="features">
+          <li>Rede exclusiva de criadores UGC</li>
+          <li>Gestão completa de afiliados</li>
+          <li>Conteúdo para redes sociais</li>
+          <li>Campanhas de performance</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">🌟</div>
+        <h3>Capacitação & Gestão de Novos Talentos</h3>
+        <p>Formação e gestão de criadores especializados em Live Shopping para sua operação crescer com escala.</p>
+        <ul class="features">
+          <li>Seleção e formação de talentos</li>
+          <li>Treinamento em vendas ao vivo</li>
+          <li>Gestão de agenda e performance</li>
+          <li>Banco de talentos exclusivo</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">🎓</div>
+        <h3>Treinamentos</h3>
+        <p>Capacitação completa para equipes internas dominarem o Live Shopping e aumentarem resultados de forma independente.</p>
+        <ul class="features">
+          <li>Treinamento de equipes internas</li>
+          <li>Metodologia exclusiva de vendas</li>
+          <li>Mentorias individuais e em grupo</li>
+          <li>Certificação Mundo das Lives</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUA LOJA AO VIVO -->
+<section id="loja-ao-vivo">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag" style="background: rgba(0,200,255,.08); border-color: rgba(0,200,255,.3); color: var(--cyan);">Live Shopping</span>
+      <h2 class="loja-headline">
+        SUA LOJA AO VIVO<br/>
+        <span class="grad-text">NA RUA MAIS MOVIMENTADA DO MUNDO</span>
+      </h2>
+      <p style="font-size: clamp(1.05rem, 2.2vw, 1.35rem); color: var(--muted); max-width: 620px; margin: 0 auto;">
+        Sua loja se torna reconhecida de forma nacional com <strong style="color: var(--white);">vendas em tempo real!</strong>
+      </p>
     </div>
   </div>
 </section>
@@ -1032,40 +1142,33 @@
   <div class="container">
     <div class="reveal">
       <span class="section-tag">Para Quem é</span>
-      <h2 class="section-title">Feito para quem quer crescer<br/>sem complicação</h2>
+      <h2 class="section-title">Marcas B2C &amp; Sellers<br/>de Marketplace</h2>
       <div class="divider"></div>
+      <p class="section-sub">Para empresas que vendem diretamente ao consumidor final e desejam transformar live em canal recorrente de vendas.</p>
     </div>
-    <div class="targets">
-      <div class="target-card reveal">
-        <div class="t-icon">🏭</div>
-        <h3>Fabricantes</h3>
-        <p>Você produz, a gente vende. Escale suas vendas direto ao consumidor sem precisar montar uma operação de marketing do zero.</p>
-      </div>
-      <div class="target-card reveal">
-        <div class="t-icon">👗</div>
-        <h3>Marcas de Moda</h3>
-        <p>Showcases ao vivo que convertem mais do que fotos e vídeos. Mostre textura, caimento e estilo em tempo real.</p>
-      </div>
-      <div class="target-card reveal">
-        <div class="t-icon">💄</div>
-        <h3>Beleza & Cosmético</h3>
-        <p>Demonstrações ao vivo que vencem a barreira da experimentação e constroem confiança instantânea com o consumidor.</p>
-      </div>
-      <div class="target-card reveal">
-        <div class="t-icon">🛍️</div>
-        <h3>Lojistas & Distribuidores</h3>
-        <p>Transforme seu estoque parado em vendas. Lives frequentes que criam urgência e movimentam produtos de forma consistente.</p>
-      </div>
-      <div class="target-card reveal">
-        <div class="t-icon">🌿</div>
-        <h3>Saúde & Bem-Estar</h3>
-        <p>Educação + venda em tempo real. Explique benefícios, quebre objeções e converta com autoridade e conexão genuína.</p>
-      </div>
-      <div class="target-card reveal">
-        <div class="t-icon">🎁</div>
-        <h3>Varejo em Geral</h3>
-        <p>Qualquer produto pode ser vendido ao vivo. Se você tem produto e quer vender, a gente tem a estrutura e o time.</p>
-      </div>
+
+    <!-- Categorias -->
+    <div class="categories-grid reveal">
+      <div class="cat-pill">👗 Moda</div>
+      <div class="cat-pill">💄 Beleza</div>
+      <div class="cat-pill">💍 Acessórios</div>
+      <div class="cat-pill">📱 Eletrônicos</div>
+      <div class="cat-pill">🌿 Saúde &amp; Bem Estar</div>
+      <div class="cat-pill">🏠 Casa e Utilitários</div>
+      <div class="cat-pill">🧴 Cuidados Pessoais</div>
+      <div class="cat-pill">🧸 Infantil</div>
+      <div class="cat-pill">🏋️ Fitness e Esporte</div>
+      <div class="cat-pill">🐾 Pet</div>
+      <div class="cat-pill">📚 Papelaria</div>
+      <div class="cat-pill cat-pill-more">✨ E Muito Mais!</div>
+    </div>
+
+    <!-- Ecossistema -->
+    <div class="ecosystem-box reveal">
+      <p class="eco-text">
+        Somos um <em>ecossistema</em> que conecta marca com o público certo<br/>
+        impulsionando <em>vendas em tempo real</em>
+      </p>
     </div>
   </div>
 </section>
