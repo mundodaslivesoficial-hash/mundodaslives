@@ -417,52 +417,83 @@
       border: 1px solid rgba(255,31,140,.2);
     }
 
-    /* ─── SERVIÇOS / PILARES ─── */
-    #servicos { background: var(--dark2); }
-    .cards-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px;
+    /* ─── SERVIÇOS VISUAL (white section) ─── */
+    #servicos {
+      background: #ffffff;
+      padding: 100px 24px;
     }
-    .card {
-      background: var(--dark3); border: 1px solid var(--border);
-      border-radius: 24px; padding: 40px 32px;
-      position: relative; overflow: hidden;
-      transition: border-color .3s, transform .3s;
+    .servicos-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 48px; margin-bottom: 80px; flex-wrap: wrap;
     }
-    .card:hover { border-color: rgba(255,31,140,.4); transform: translateY(-4px); }
-    .card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: var(--grad);
-      opacity: 0; transition: opacity .3s;
+    .servicos-titulo {
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 900; color: var(--pink);
+      line-height: 1; letter-spacing: -.03em;
+      font-family: 'Inter', sans-serif;
     }
-    .card:hover::before { opacity: 1; }
-    .card-icon {
-      width: 60px; height: 60px; border-radius: 18px;
-      background: rgba(255,31,140,.08); border: 1px solid rgba(255,31,140,.2);
+    .servicos-titulo-bar {
+      width: 64px; height: 5px;
+      background: var(--pink); border-radius: 3px; margin-top: 14px;
+    }
+    .servicos-sub-text {
+      max-width: 420px; color: #555;
+      font-size: 1rem; line-height: 1.75;
+      padding-top: 8px;
+    }
+    .servico-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 72px; align-items: center;
+      padding: 64px 0; border-bottom: 1px solid #f0eff4;
+    }
+    .servico-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .servico-row.reverse .servico-img-wrap { order: 2; }
+    .servico-row.reverse .servico-text    { order: 1; }
+    .servico-img-wrap {
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem; margin-bottom: 24px;
     }
-    .card h3 { font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 12px; }
-    .card p { font-size: .9rem; color: var(--muted); line-height: 1.7; }
-    .card .features {
-      list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 8px;
+    .servico-circle {
+      width: min(360px, 90vw); height: min(360px, 90vw);
+      border-radius: 50%; overflow: hidden;
+      border: 5px solid var(--pink);
+      box-shadow: 0 0 0 10px rgba(255,31,140,.10), 0 24px 64px rgba(255,31,140,.22);
+      position: relative; flex-shrink: 0;
     }
-    .card .features li {
-      display: flex; align-items: center; gap: 8px;
-      font-size: .85rem; color: var(--muted);
+    .servico-circle img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
     }
-    .card .features li::before {
-      content: '✓'; color: var(--cyan); font-weight: 700; font-size: .8rem;
+    .servico-circle-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #fdf0f7, #f5eafc);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem;
     }
-    .card.featured {
-      border-color: rgba(255,31,140,.35);
-      background: linear-gradient(135deg, rgba(255,31,140,.07), rgba(0,200,255,.04), var(--dark3));
+    .servico-text h3 {
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      font-weight: 800; color: var(--pink);
+      margin-bottom: 14px; line-height: 1.25;
     }
-    .card.featured::before { opacity: 1; }
-    .card-badge {
-      position: absolute; top: 20px; right: 20px;
-      background: var(--grad); color: #fff;
-      font-size: .7rem; font-weight: 700; letter-spacing: .05em;
-      padding: 3px 10px; border-radius: 20px; text-transform: uppercase;
+    .servico-text p {
+      font-size: 1rem; color: #555;
+      line-height: 1.8; margin-bottom: 22px;
+    }
+    .servico-text ul {
+      list-style: none; display: flex; flex-direction: column; gap: 10px;
+    }
+    .servico-text ul li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .92rem; color: #333; font-weight: 500;
+    }
+    .servico-text ul li::before {
+      content: '✓'; color: var(--pink); font-weight: 800;
+      font-size: .85rem; flex-shrink: 0;
+    }
+    @media (max-width: 900px) {
+      .servico-row { grid-template-columns: 1fr; gap: 36px; }
+      .servico-row.reverse .servico-img-wrap { order: 0; }
+      .servico-row.reverse .servico-text    { order: 0; }
+      .servicos-header { flex-direction: column; gap: 20px; }
     }
 
     /* ─── CABINES ─── */
@@ -1004,70 +1035,116 @@
 <!-- SERVIÇOS / PILARES -->
 <section id="servicos">
   <div class="container">
-    <div class="reveal">
-      <span class="section-tag">Nossas Soluções</span>
-      <h2 class="section-title">Estrutura completa para<br/>vender mais ao vivo</h2>
-      <div class="divider"></div>
-      <p class="section-sub">Possuímos estrutura para produzir diversos formatos e gêneros de conteúdo. Especialistas em marcas que vendem diretamente ao consumidor no digital.</p>
+
+    <!-- Cabeçalho -->
+    <div class="servicos-header reveal">
+      <div>
+        <h2 class="servicos-titulo">SERVIÇOS</h2>
+        <div class="servicos-titulo-bar"></div>
+      </div>
+      <p class="servicos-sub-text">Possuímos estrutura para produzir diversos formatos e gêneros de conteúdo. Especialistas em marcas que vendem diretamente ao consumidor no digital.</p>
     </div>
-    <div class="cards-grid-5">
-      <div class="card featured reveal">
-        <div class="card-badge">⭐ Core</div>
-        <div class="card-icon">📡</div>
-        <h3>Implementação & Gestão de LIVE</h3>
-        <p>Operação completa das suas lives: da estratégia à transmissão. Cuidamos de tudo para você focar no produto.</p>
-        <ul class="features">
+
+    <!-- 1. Implementação & Gestão de LIVE -->
+    <div class="servico-row reveal">
+      <div class="servico-img-wrap">
+        <div class="servico-circle">
+          <img src="images/img-live.jpg" alt="Live Shopping" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="servico-circle-placeholder" style="display:none">📡</div>
+        </div>
+      </div>
+      <div class="servico-text">
+        <h3>Implementação &amp; Gestão de LIVE</h3>
+        <p>Operação completa das suas lives: da estratégia à transmissão. Sem estrutura para lives — câmera, cenário, iluminação, roteiro — tudo por conta própria resulta em zero resultado profissional.</p>
+        <ul>
           <li>Planejamento e calendário de lives</li>
           <li>Roteiro e gestão de audiência</li>
           <li>Transmissão técnica profissional</li>
           <li>Relatórios de performance</li>
         </ul>
       </div>
-      <div class="card reveal">
-        <div class="card-icon">🛒</div>
+    </div>
+
+    <!-- 2. Gestão de Marketplaces -->
+    <div class="servico-row reverse reveal">
+      <div class="servico-img-wrap">
+        <div class="servico-circle">
+          <img src="images/img-marketplace.jpg" alt="Gestão de Marketplaces" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="servico-circle-placeholder" style="display:none">🛒</div>
+        </div>
+      </div>
+      <div class="servico-text">
         <h3>Gestão de Marketplaces</h3>
-        <p>Gestão integrada nos principais marketplaces, potencializando suas vendas em múltiplos canais ao mesmo tempo.</p>
-        <ul class="features">
+        <p>Gestão integrada nos principais marketplaces, potencializando suas vendas em múltiplos canais ao mesmo tempo com estratégia e inteligência de dados.</p>
+        <ul>
           <li>TikTok Shop, Shopee, Mercado Livre</li>
           <li>Otimização de listings e catálogo</li>
           <li>Gestão de pedidos e estoque</li>
           <li>Integração com sistemas ERP</li>
         </ul>
       </div>
-      <div class="card reveal">
-        <div class="card-icon">🎥</div>
-        <h3>Conteúdo UGC & Afiliados</h3>
-        <p>Produção de conteúdo autêntico com criadores e rede de afiliados para amplificar o alcance da sua marca.</p>
-        <ul class="features">
+    </div>
+
+    <!-- 3. Conteúdo UGC & Afiliados -->
+    <div class="servico-row reveal">
+      <div class="servico-img-wrap">
+        <div class="servico-circle">
+          <img src="images/img-ugc.jpg" alt="Conteúdo UGC e Afiliados" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="servico-circle-placeholder" style="display:none">🎥</div>
+        </div>
+      </div>
+      <div class="servico-text">
+        <h3>Conteúdo UGC &amp; Afiliados</h3>
+        <p>Produção de conteúdo gerado por usuários e gestão de programa de afiliados para ampliar o alcance orgânico da sua marca com autenticidade.</p>
+        <ul>
           <li>Rede exclusiva de criadores UGC</li>
           <li>Gestão completa de afiliados</li>
           <li>Conteúdo para redes sociais</li>
           <li>Campanhas de performance</li>
         </ul>
       </div>
-      <div class="card reveal">
-        <div class="card-icon">🌟</div>
-        <h3>Capacitação & Gestão de Novos Talentos</h3>
-        <p>Formação e gestão de criadores especializados em Live Shopping para sua operação crescer com escala.</p>
-        <ul class="features">
+    </div>
+
+    <!-- 4. Capacitação & Gestão de Novos Talentos -->
+    <div class="servico-row reverse reveal">
+      <div class="servico-img-wrap">
+        <div class="servico-circle">
+          <img src="images/img-capacitacao.jpg" alt="Capacitação de Talentos" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="servico-circle-placeholder" style="display:none">🌟</div>
+        </div>
+      </div>
+      <div class="servico-text">
+        <h3>Capacitação &amp; Gestão de Novos Talentos</h3>
+        <p>Identificação, treinamento e gestão de novos creators para fortalecer o time de live shopping da sua marca ou do estúdio com escala e qualidade.</p>
+        <ul>
           <li>Seleção e formação de talentos</li>
           <li>Treinamento em vendas ao vivo</li>
           <li>Gestão de agenda e performance</li>
           <li>Banco de talentos exclusivo</li>
         </ul>
       </div>
-      <div class="card reveal">
-        <div class="card-icon">🎓</div>
+    </div>
+
+    <!-- 5. Treinamentos -->
+    <div class="servico-row reveal">
+      <div class="servico-img-wrap">
+        <div class="servico-circle">
+          <img src="images/img-treinamentos.jpg" alt="Treinamentos" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="servico-circle-placeholder" style="display:none">🎓</div>
+        </div>
+      </div>
+      <div class="servico-text">
         <h3>Treinamentos</h3>
-        <p>Capacitação completa para equipes internas dominarem o Live Shopping e aumentarem resultados de forma independente.</p>
-        <ul class="features">
+        <p>Vamos até sua empresa treinar sua equipe e dar assessoria completa. Capacitação para que sua equipe domine o Live Shopping e gere resultados de forma independente.</p>
+        <ul>
           <li>Treinamento de equipes internas</li>
-          <li>Metodologia exclusiva de vendas</li>
+          <li>Metodologia exclusiva de vendas ao vivo</li>
           <li>Mentorias individuais e em grupo</li>
           <li>Certificação Mundo das Lives</li>
         </ul>
       </div>
     </div>
+
   </div>
 </section>
 
