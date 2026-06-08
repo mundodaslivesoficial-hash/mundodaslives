@@ -822,9 +822,41 @@
       transition: color .2s;
     }
     .contact-modal-close:hover { color: #fff; }
-    .contact-modal iframe {
-      border: none; width: 100%; flex: 1; min-height: 460px;
+    .modal-form {
+      padding: 24px; display: flex; flex-direction: column; gap: 14px;
+      overflow-y: auto;
     }
+    .modal-form label {
+      display: flex; flex-direction: column; gap: 6px;
+      font-size: .85rem; color: rgba(255,255,255,.65);
+    }
+    .modal-form input, .modal-form textarea {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(167,85,247,.25);
+      border-radius: 10px; padding: 12px 16px;
+      color: #fff; font-size: .95rem; font-family: inherit; outline: none;
+      transition: border-color .2s;
+    }
+    .modal-form input:focus, .modal-form textarea:focus { border-color: rgba(255,31,140,.6); }
+    .modal-form input::placeholder, .modal-form textarea::placeholder { color: rgba(255,255,255,.28); }
+    .modal-form textarea { resize: vertical; min-height: 80px; }
+    .modal-submit {
+      background: linear-gradient(135deg, #FF1F8C, #00C8FF); color: #fff;
+      border: none; border-radius: 10px; padding: 14px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      box-shadow: 0 4px 20px rgba(255,31,140,.3);
+    }
+    .modal-submit:hover { opacity: .88; transform: translateY(-1px); }
+    .modal-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .modal-success {
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 14px;
+      padding: 48px 24px; text-align: center;
+    }
+    .modal-success.show { display: flex; }
+    .modal-success .success-icon { font-size: 3rem; }
+    .modal-success h4 { color: #fff; font-size: 1.25rem; font-weight: 700; margin: 0; }
+    .modal-success p { color: rgba(255,255,255,.55); font-size: .95rem; margin: 0; }
   </style>
 </head>
 <body>
@@ -1402,10 +1434,61 @@
       </div>
       <button class="contact-modal-close" onclick="document.getElementById('contactModal').classList.remove('open')">&times;</button>
     </div>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSceM5hraM5pASnJea9-2bcIPspDH2CLPRz-g9M_zISRC6pLOA/viewform?embedded=true" title="Formulário de contato">Carregando…</iframe>
+    <form class="modal-form" id="leadForm" novalidate>
+      <label>Nome *<input type="text" name="nome" placeholder="Seu nome completo" required /></label>
+      <label>WhatsApp *<input type="tel" name="whatsapp" placeholder="(11) 99999-9999" required /></label>
+      <label>E-mail *<input type="email" name="email" placeholder="seu@email.com" required /></label>
+      <label>Empresa / Marca<input type="text" name="empresa" placeholder="Nome da sua empresa ou marca" /></label>
+      <label>Mensagem<textarea name="mensagem" placeholder="Conte um pouco sobre o que você precisa..."></textarea></label>
+      <button type="submit" class="modal-submit" id="leadSubmit">Enviar e falar com o time →</button>
+      <p id="leadError" style="color:#FF1F8C;font-size:.85rem;margin:0;display:none;"></p>
+    </form>
+    <div class="modal-success" id="leadSuccess">
+      <span class="success-icon">🎉</span>
+      <h4>Recebemos seu contato!</h4>
+      <p>Nosso time vai entrar em contato em até 24 horas pelo WhatsApp.</p>
+    </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://gnbxufvhqeugujwwaccn.supabase.co',
+    'sb_publishable_OJ9ZMxFyBBljk5HI-iwJ-g_J41fccPs'
+  );
+
+  document.getElementById('leadForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('leadSubmit');
+    const errEl = document.getElementById('leadError');
+    const f = e.target;
+    if (!f.nome.value.trim() || !f.whatsapp.value.trim() || !f.email.value.trim()) {
+      errEl.textContent = 'Preencha nome, WhatsApp e e-mail.';
+      errEl.style.display = 'block';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    errEl.style.display = 'none';
+    const { error } = await sb.from('leads').insert({
+      nome: f.nome.value.trim(),
+      whatsapp: f.whatsapp.value.trim(),
+      email: f.email.value.trim(),
+      empresa: f.empresa.value.trim() || null,
+      mensagem: f.mensagem.value.trim() || null,
+    });
+    if (error) {
+      errEl.textContent = 'Erro ao enviar. Tente novamente ou fale pelo WhatsApp.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Enviar e falar com o time →';
+    } else {
+      document.getElementById('leadForm').style.display = 'none';
+      document.getElementById('leadSuccess').classList.add('show');
+    }
+  });
+</script>
 <script>
   // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
