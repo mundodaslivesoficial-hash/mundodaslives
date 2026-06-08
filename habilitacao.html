@@ -330,15 +330,21 @@
       border: 1px solid rgba(255,255,255,.07);
       border-radius: 12px;
     }
+    /* ── VARIATION ROWS (redesign) ── */
     .var-row {
-      display: grid;
-      grid-template-columns: 148px 1fr 1fr 32px;
-      gap: 10px; align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px; padding: 12px;
+      margin-bottom: 10px;
     }
-    .var-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .var-row:first-child { padding-top: 0; }
+    .var-row-top {
+      display: grid; grid-template-columns: 148px 1fr 32px;
+      gap: 10px; align-items: center; margin-bottom: 10px;
+    }
+    .var-row-bottom {
+      display: grid; grid-template-columns: 1fr 120px;
+      gap: 10px; align-items: end;
+    }
     .var-row select,
     .var-row input[type="text"] {
       background: rgba(255,255,255,.05);
@@ -350,6 +356,7 @@
     .var-row select option { background: #1a1a2e; }
     .var-row input:focus, .var-row select:focus { border-color: rgba(255,31,140,.4); }
     .var-row input::placeholder { color: rgba(255,255,255,.2); }
+    .var-row .var-label { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.4); margin-bottom: 5px; }
     .btn-remove-var {
       background: none; border: none; cursor: pointer;
       color: rgba(255,255,255,.22); font-size: .85rem;
@@ -365,11 +372,66 @@
       font-family: inherit; transition: all .2s;
     }
     .btn-add-var:hover { border-color: rgba(255,31,140,.38); color: var(--pink); }
-    .var-header {
-      display: grid; grid-template-columns: 148px 1fr 1fr 32px;
-      gap: 10px; margin-bottom: 6px;
+
+    /* ── VARIATION IMAGE SLOT ── */
+    .var-img-slot {
+      position: relative; height: 64px;
+      border: 1px dashed rgba(255,255,255,.13);
+      border-radius: 8px; overflow: hidden;
+      cursor: pointer; background: rgba(255,255,255,.02);
+      transition: all .2s;
     }
-    .var-header span { font-size: .72rem; color: var(--muted); font-weight: 600; padding: 0 2px; }
+    .var-img-slot:hover { border-color: rgba(255,31,140,.3); }
+    .var-img-slot input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; z-index: 2;
+    }
+    .var-img-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+      font-size: .7rem; color: rgba(255,255,255,.3);
+    }
+    .var-img-inner span:first-child { font-size: 1rem; }
+
+    /* ── PHOTO GRID (9 fotos) ── */
+    .photo-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-top: 4px;
+    }
+    .photo-slot {
+      position: relative; aspect-ratio: 1;
+      border: 2px dashed rgba(255,255,255,.12);
+      border-radius: 10px; overflow: hidden; cursor: pointer;
+      background: rgba(255,255,255,.02); transition: all .2s;
+    }
+    .photo-slot:hover { border-color: rgba(255,31,140,.4); background: rgba(255,31,140,.03); }
+    .photo-slot.has-photo { border-style: solid; border-color: rgba(0,200,100,.32); }
+    .photo-slot input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; z-index: 2;
+    }
+    .photo-slot-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 4px;
+    }
+    .photo-slot.has-photo .photo-slot-inner { display: none; }
+    .photo-slot-icon { font-size: 1.2rem; }
+    .photo-slot-num  { font-size: .68rem; color: var(--muted); font-weight: 600; }
+    .photo-slot img  {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: none;
+    }
+    .photo-slot.has-photo img { display: block; }
+    .photo-remove {
+      position: absolute; top: 4px; right: 4px; z-index: 3;
+      background: rgba(0,0,0,.72); border: none; color: #fff;
+      width: 20px; height: 20px; border-radius: 50%;
+      font-size: .6rem; cursor: pointer;
+      align-items: center; justify-content: center; display: none;
+    }
+    .photo-slot.has-photo .photo-remove { display: flex; }
 
     /* ── SCREENS ── */
     .screen { display: none; }
@@ -998,6 +1060,17 @@
 
   // ── Produto template
   function prodHTML(idx) {
+    const photos = [0,1,2,3,4,5,6,7,8].map(i => `
+      <div class="photo-slot" id="photo-${idx}-${i}">
+        <input type="file" accept="image/*" onchange="photoSelected(${idx},${i},this)" />
+        <div class="photo-slot-inner">
+          <span class="photo-slot-icon">📷</span>
+          <span class="photo-slot-num">Foto ${i+1}${i===0?' (capa)':''}</span>
+        </div>
+        <img id="photo-img-${idx}-${i}" alt="" />
+        <button type="button" class="photo-remove" onclick="photoRemove(${idx},${i},event)">✕</button>
+      </div>`).join('');
+
     return `
       <div class="prod-entry" id="prod-${idx}">
         <div class="prod-header">
@@ -1046,14 +1119,35 @@
             <label>Marca</label>
             <input type="text" name="p_marca_${idx}" placeholder="Nome da marca" />
           </div>
-          <div class="field">
-            <label>Flag</label>
-            <div class="toggle-group" id="flag-grp-${idx}">
-              <button type="button" class="tgl-btn active" onclick="setToggle('p_flag_${idx}','flag-grp-${idx}',this)">Não</button>
-              <button type="button" class="tgl-btn" onclick="setToggle('p_flag_${idx}','flag-grp-${idx}',this)">Sim</button>
-            </div>
-            <input type="hidden" name="p_flag_${idx}" id="p_flag_${idx}" value="nao" />
+
+          <!-- Dimensões -->
+          <div class="field" style="grid-column:1/-1;margin-top:4px;">
+            <label style="font-size:.78rem;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;">Dimensões do produto</label>
           </div>
+          <div class="field">
+            <label>Comprimento (cm) <span class="req">*</span></label>
+            <input type="number" name="p_comprimento_${idx}" placeholder="Ex: 30" min="0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Largura (cm) <span class="req">*</span></label>
+            <input type="number" name="p_largura_${idx}" placeholder="Ex: 20" min="0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Altura (cm) <span class="req">*</span></label>
+            <input type="number" name="p_altura_${idx}" placeholder="Ex: 10" min="0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Peso (kg) <span class="req">*</span></label>
+            <input type="number" name="p_peso_${idx}" placeholder="Ex: 0.500" min="0" step="0.001" />
+          </div>
+
+          <!-- Fotos -->
+          <div class="field f-full" style="margin-top:4px;">
+            <label>Fotos do produto <span class="opt">(até 9 — primeira é a capa)</span></label>
+            <div class="photo-grid">${photos}</div>
+          </div>
+
+          <!-- Variação -->
           <div class="field f-full">
             <label>Variação</label>
             <div class="toggle-group" id="var-grp-${idx}">
@@ -1062,9 +1156,6 @@
             </div>
             <input type="hidden" name="p_variacao_${idx}" id="p_variacao_${idx}" value="nao" />
             <div class="var-builder" id="var-builder-${idx}" style="display:none;">
-              <div class="var-header">
-                <span>Tipo</span><span>Itens (separados por vírgula)</span><span>Descrição (opcional)</span><span></span>
-              </div>
               <div id="var-list-${idx}"></div>
               <button type="button" class="btn-add-var" onclick="addVariacao(${idx})">+ Adicionar variação</button>
             </div>
@@ -1094,14 +1185,32 @@
     const vi = prodVarCount[prodIdx];
     document.getElementById('var-list-' + prodIdx).insertAdjacentHTML('beforeend', `
       <div class="var-row" id="var-${prodIdx}-${vi}">
-        <select name="vr_tipo_${prodIdx}_${vi}">
-          <option value="cor">Cor</option>
-          <option value="tamanho">Tamanho</option>
-          <option value="linha">Linha</option>
-        </select>
-        <input type="text" name="vr_itens_${prodIdx}_${vi}" placeholder="Ex: Azul, Vermelho, Preto" />
-        <input type="text" name="vr_desc_${prodIdx}_${vi}" placeholder="Descrição (opcional)" />
-        <button type="button" class="btn-remove-var" onclick="removeVariacao(${prodIdx},${vi})">✕</button>
+        <div class="var-row-top">
+          <select name="vr_tipo_${prodIdx}_${vi}">
+            <option value="cor">Cor</option>
+            <option value="tamanho">Tamanho</option>
+            <option value="linha">Linha</option>
+          </select>
+          <input type="text" name="vr_itens_${prodIdx}_${vi}" placeholder="Itens: Azul, Vermelho, Preto..." />
+          <button type="button" class="btn-remove-var" onclick="removeVariacao(${prodIdx},${vi})">✕</button>
+        </div>
+        <div class="var-row-bottom">
+          <div>
+            <div class="var-label">Preço (R$)</div>
+            <input type="text" name="vr_preco_${prodIdx}_${vi}" placeholder="Ex: 89,90" />
+          </div>
+          <div>
+            <div class="var-label">Imagem da variação</div>
+            <div class="var-img-slot" id="var-img-slot-${prodIdx}-${vi}">
+              <input type="file" accept="image/*" onchange="varImgSelected(${prodIdx},${vi},this)" />
+              <div class="var-img-inner">
+                <span>🖼</span><span>Enviar foto</span>
+              </div>
+              <img id="var-img-preview-${prodIdx}-${vi}" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px;" />
+              <button type="button" class="photo-remove" id="var-img-remove-${prodIdx}-${vi}" onclick="varImgRemove(${prodIdx},${vi},event)" style="display:none;">✕</button>
+            </div>
+          </div>
+        </div>
       </div>`);
     prodVarCount[prodIdx]++;
   }
@@ -1109,6 +1218,49 @@
   function removeVariacao(prodIdx, vi) {
     const el = document.getElementById('var-' + prodIdx + '-' + vi);
     if (el) el.remove();
+  }
+
+  // ── Product photo helpers
+  function photoSelected(prodIdx, slotIdx, input) {
+    if (!input.files[0]) return;
+    const slot = document.getElementById(`photo-${prodIdx}-${slotIdx}`);
+    const img  = document.getElementById(`photo-img-${prodIdx}-${slotIdx}`);
+    slot.classList.add('has-photo');
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; };
+    reader.readAsDataURL(input.files[0]);
+  }
+  function photoRemove(prodIdx, slotIdx, event) {
+    event.preventDefault(); event.stopPropagation();
+    const slot = document.getElementById(`photo-${prodIdx}-${slotIdx}`);
+    const img  = document.getElementById(`photo-img-${prodIdx}-${slotIdx}`);
+    slot.classList.remove('has-photo');
+    img.src = '';
+    slot.querySelector('input[type="file"]').value = '';
+  }
+
+  // ── Variation image helpers
+  function varImgSelected(prodIdx, vi, input) {
+    if (!input.files[0]) return;
+    const preview   = document.getElementById(`var-img-preview-${prodIdx}-${vi}`);
+    const removeBtn = document.getElementById(`var-img-remove-${prodIdx}-${vi}`);
+    const inner     = document.querySelector(`#var-img-slot-${prodIdx}-${vi} .var-img-inner`);
+    const reader = new FileReader();
+    reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+    reader.readAsDataURL(input.files[0]);
+    if (removeBtn) removeBtn.style.display = 'flex';
+    if (inner) inner.style.display = 'none';
+  }
+  function varImgRemove(prodIdx, vi, event) {
+    event.preventDefault(); event.stopPropagation();
+    const preview   = document.getElementById(`var-img-preview-${prodIdx}-${vi}`);
+    const removeBtn = document.getElementById(`var-img-remove-${prodIdx}-${vi}`);
+    const inner     = document.querySelector(`#var-img-slot-${prodIdx}-${vi} .var-img-inner`);
+    const input     = document.querySelector(`#var-img-slot-${prodIdx}-${vi} input[type="file"]`);
+    preview.src = ''; preview.style.display = 'none';
+    if (removeBtn) removeBtn.style.display = 'none';
+    if (inner) inner.style.display = 'flex';
+    if (input) input.value = '';
   }
 
   function addProd() {
@@ -1233,29 +1385,52 @@
       const produtos = [];
       for (let i = 0; i < prodCount; i++) {
         if (!document.getElementById('prod-' + i)) continue;
-        // Collect variations
+        // Upload product photos (up to 9)
+        const fotos = [];
+        for (let s = 0; s < 9; s++) {
+          const slot = document.getElementById(`photo-${i}-${s}`);
+          if (!slot) continue;
+          const fileInput = slot.querySelector('input[type="file"]');
+          if (fileInput?.files[0]) {
+            const file = fileInput.files[0];
+            const path = await uploadFile(file, `${slug}/prod-${i}/foto-${s}.${file.name.split('.').pop()}`);
+            fotos.push(path);
+          }
+        }
+        // Collect variations + upload their images
         const variacoes = [];
         const vc = prodVarCount[i] || 0;
         for (let j = 0; j < vc; j++) {
           if (!document.getElementById(`var-${i}-${j}`)) continue;
+          let varImgPath = null;
+          const varImgInput = document.querySelector(`#var-img-slot-${i}-${j} input[type="file"]`);
+          if (varImgInput?.files[0]) {
+            const file = varImgInput.files[0];
+            varImgPath = await uploadFile(file, `${slug}/prod-${i}/var-${j}.${file.name.split('.').pop()}`);
+          }
           variacoes.push({
-            tipo:  f[`vr_tipo_${i}_${j}`]?.value,
-            itens: (f[`vr_itens_${i}_${j}`]?.value || '').split(',').map(s => s.trim()).filter(Boolean),
-            desc:  f[`vr_desc_${i}_${j}`]?.value?.trim() || null,
+            tipo:   f[`vr_tipo_${i}_${j}`]?.value,
+            itens:  (f[`vr_itens_${i}_${j}`]?.value || '').split(',').map(s => s.trim()).filter(Boolean),
+            preco:  f[`vr_preco_${i}_${j}`]?.value?.trim() || null,
+            imagem: varImgPath,
           });
         }
         produtos.push({
-          nome:      f[`p_nome_${i}`]?.value?.trim(),
-          descricao: f[`p_descricao_${i}`]?.value?.trim() || null,
-          sku:       f[`p_sku_${i}`]?.value?.trim() || null,
-          ncm:       f[`p_ncm_${i}`]?.value?.trim(),
-          preco:     f[`p_preco_${i}`]?.value?.trim(),
-          unidade:   f[`p_unidade_${i}`]?.value,
-          estoque:   Number(f[`p_estoque_${i}`]?.value) || 0,
-          marca:     f[`p_marca_${i}`]?.value?.trim() || null,
-          flag:      f[`p_flag_${i}`]?.value === 'sim',
-          variacao:  f[`p_variacao_${i}`]?.value === 'sim',
-          variacoes: variacoes.length > 0 ? variacoes : null,
+          nome:        f[`p_nome_${i}`]?.value?.trim(),
+          descricao:   f[`p_descricao_${i}`]?.value?.trim() || null,
+          sku:         f[`p_sku_${i}`]?.value?.trim() || null,
+          ncm:         f[`p_ncm_${i}`]?.value?.trim(),
+          preco:       f[`p_preco_${i}`]?.value?.trim(),
+          unidade:     f[`p_unidade_${i}`]?.value,
+          estoque:     Number(f[`p_estoque_${i}`]?.value) || 0,
+          marca:       f[`p_marca_${i}`]?.value?.trim() || null,
+          comprimento: f[`p_comprimento_${i}`]?.value || null,
+          largura:     f[`p_largura_${i}`]?.value || null,
+          altura:      f[`p_altura_${i}`]?.value || null,
+          peso:        f[`p_peso_${i}`]?.value || null,
+          fotos:       fotos.length > 0 ? fotos : null,
+          variacao:    f[`p_variacao_${i}`]?.value === 'sim',
+          variacoes:   variacoes.length > 0 ? variacoes : null,
         });
       }
 
