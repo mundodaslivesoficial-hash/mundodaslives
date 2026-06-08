@@ -303,12 +303,83 @@
     .success-card .sc-item:last-child { border-bottom: none; }
     .success-card .sc-item .si-icon { font-size: .95rem; flex-shrink: 0; }
 
+    /* ── TOGGLE SIM/NÃO ── */
+    .toggle-group {
+      display: flex; gap: 0;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px; padding: 3px;
+      width: fit-content;
+    }
+    .tgl-btn {
+      padding: 8px 22px; border: 1px solid transparent;
+      border-radius: 6px; background: none;
+      color: var(--muted); font-size: .85rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .tgl-btn.active {
+      background: rgba(255,31,140,.16);
+      border-color: rgba(255,31,140,.38);
+      color: var(--pink);
+    }
+
+    /* ── VARIATION BUILDER ── */
+    .var-builder {
+      margin-top: 14px; padding: 16px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 12px;
+    }
+    .var-row {
+      display: grid;
+      grid-template-columns: 148px 1fr 1fr 32px;
+      gap: 10px; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .var-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .var-row:first-child { padding-top: 0; }
+    .var-row select,
+    .var-row input[type="text"] {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px; padding: 9px 12px;
+      color: #fff; font-size: .83rem; font-family: inherit; outline: none;
+      width: 100%;
+    }
+    .var-row select option { background: #1a1a2e; }
+    .var-row input:focus, .var-row select:focus { border-color: rgba(255,31,140,.4); }
+    .var-row input::placeholder { color: rgba(255,255,255,.2); }
+    .btn-remove-var {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,.22); font-size: .85rem;
+      padding: 6px; border-radius: 6px; transition: all .2s;
+    }
+    .btn-remove-var:hover { color: var(--pink); background: rgba(255,31,140,.1); }
+    .btn-add-var {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; margin-top: 12px;
+      background: transparent; border: 1px dashed rgba(255,255,255,.13);
+      color: var(--muted); border-radius: 8px; padding: 9px 14px;
+      font-size: .82rem; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: all .2s;
+    }
+    .btn-add-var:hover { border-color: rgba(255,31,140,.38); color: var(--pink); }
+    .var-header {
+      display: grid; grid-template-columns: 148px 1fr 1fr 32px;
+      gap: 10px; margin-bottom: 6px;
+    }
+    .var-header span { font-size: .72rem; color: var(--muted); font-weight: 600; padding: 0 2px; }
+
     @media (max-width: 600px) {
       .fields-grid { grid-template-columns: 1fr; }
       .f-full { grid-column: 1; }
       .step-card { padding: 20px; }
       .container { padding: 32px 16px 80px; }
       .prog-line { min-width: 24px; }
+      .var-row { grid-template-columns: 1fr 1fr; }
+      .var-row select { grid-column: 1 / -1; }
+      .var-header { display: none; }
     }
   </style>
 </head>
@@ -597,6 +668,9 @@
     btn.textContent = el.type === 'password' ? '👁' : '🙈';
   }
 
+  // ── Variation counters per product
+  const prodVarCount = {};
+
   // ── Produto template
   function prodHTML(idx) {
     return `
@@ -607,12 +681,16 @@
         </div>
         <div class="fields-grid">
           <div class="field f-full">
-            <label>Nome / descrição do produto <span class="req">*</span></label>
-            <input type="text" name="p_nome_${idx}" placeholder="Nome completo do produto" />
+            <label>Nome <span class="req">*</span></label>
+            <input type="text" name="p_nome_${idx}" placeholder="Nome do produto" />
+          </div>
+          <div class="field f-full">
+            <label>Descrição</label>
+            <textarea name="p_descricao_${idx}" rows="2" placeholder="Descrição detalhada do produto..." style="resize:vertical;min-height:70px;"></textarea>
           </div>
           <div class="field">
-            <label>Código / SKU <span class="req">*</span></label>
-            <input type="text" name="p_sku_${idx}" placeholder="Ex: PROD-001" />
+            <label>SKU <span class="opt">(código específico, se desejar)</span></label>
+            <input type="text" name="p_sku_${idx}" placeholder="Sugestivo ou defina o seu" />
           </div>
           <div class="field">
             <label>NCM <span class="req">*</span></label>
@@ -640,15 +718,72 @@
             <input type="number" name="p_estoque_${idx}" placeholder="Ex: 50" min="0" />
           </div>
           <div class="field">
-            <label>GTIN / EAN (código de barras) <span class="opt">(se tiver)</span></label>
-            <input type="text" name="p_gtin_${idx}" placeholder="Ex: 7891234567890" maxlength="14" />
+            <label>Marca</label>
+            <input type="text" name="p_marca_${idx}" placeholder="Nome da marca" />
           </div>
           <div class="field">
-            <label>Categoria</label>
-            <input type="text" name="p_categoria_${idx}" placeholder="Ex: Moda Feminina" />
+            <label>Flag</label>
+            <div class="toggle-group" id="flag-grp-${idx}">
+              <button type="button" class="tgl-btn active" onclick="setToggle('p_flag_${idx}','flag-grp-${idx}',this)">Não</button>
+              <button type="button" class="tgl-btn" onclick="setToggle('p_flag_${idx}','flag-grp-${idx}',this)">Sim</button>
+            </div>
+            <input type="hidden" name="p_flag_${idx}" id="p_flag_${idx}" value="nao" />
+          </div>
+          <div class="field f-full">
+            <label>Variação</label>
+            <div class="toggle-group" id="var-grp-${idx}">
+              <button type="button" class="tgl-btn active" onclick="setVariacao(${idx},'nao',this)">Não</button>
+              <button type="button" class="tgl-btn" onclick="setVariacao(${idx},'sim',this)">Sim</button>
+            </div>
+            <input type="hidden" name="p_variacao_${idx}" id="p_variacao_${idx}" value="nao" />
+            <div class="var-builder" id="var-builder-${idx}" style="display:none;">
+              <div class="var-header">
+                <span>Tipo</span><span>Itens (separados por vírgula)</span><span>Descrição (opcional)</span><span></span>
+              </div>
+              <div id="var-list-${idx}"></div>
+              <button type="button" class="btn-add-var" onclick="addVariacao(${idx})">+ Adicionar variação</button>
+            </div>
           </div>
         </div>
       </div>`;
+  }
+
+  function setToggle(hiddenId, grpId, btn) {
+    const btns = document.querySelectorAll('#' + grpId + ' .tgl-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const idx = Array.from(btns).indexOf(btn);
+    document.getElementById(hiddenId).value = idx === 1 ? 'sim' : 'nao';
+  }
+
+  function setVariacao(prodIdx, val, btn) {
+    const grpId = 'var-grp-' + prodIdx;
+    document.querySelectorAll('#' + grpId + ' .tgl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('p_variacao_' + prodIdx).value = val;
+    document.getElementById('var-builder-' + prodIdx).style.display = val === 'sim' ? 'block' : 'none';
+  }
+
+  function addVariacao(prodIdx) {
+    if (!prodVarCount[prodIdx]) prodVarCount[prodIdx] = 0;
+    const vi = prodVarCount[prodIdx];
+    document.getElementById('var-list-' + prodIdx).insertAdjacentHTML('beforeend', `
+      <div class="var-row" id="var-${prodIdx}-${vi}">
+        <select name="vr_tipo_${prodIdx}_${vi}">
+          <option value="cor">Cor</option>
+          <option value="tamanho">Tamanho</option>
+          <option value="linha">Linha</option>
+        </select>
+        <input type="text" name="vr_itens_${prodIdx}_${vi}" placeholder="Ex: Azul, Vermelho, Preto" />
+        <input type="text" name="vr_desc_${prodIdx}_${vi}" placeholder="Descrição (opcional)" />
+        <button type="button" class="btn-remove-var" onclick="removeVariacao(${prodIdx},${vi})">✕</button>
+      </div>`);
+    prodVarCount[prodIdx]++;
+  }
+
+  function removeVariacao(prodIdx, vi) {
+    const el = document.getElementById('var-' + prodIdx + '-' + vi);
+    if (el) el.remove();
   }
 
   function addProd() {
@@ -703,10 +838,10 @@
     if (step === 3) {
       for (let i = 0; i < prodCount; i++) {
         if (!document.getElementById('prod-' + i)) continue;
-        const fields = [`p_nome_${i}`, `p_sku_${i}`, `p_ncm_${i}`, `p_preco_${i}`, `p_unidade_${i}`, `p_estoque_${i}`];
-        for (const n of fields) {
+        const required = [`p_nome_${i}`, `p_ncm_${i}`, `p_preco_${i}`, `p_unidade_${i}`, `p_estoque_${i}`];
+        for (const n of required) {
           if (!f[n] || !f[n].value.toString().trim()) {
-            showErr(3, `Preencha todos os campos obrigatórios do Produto #${i + 1}.`);
+            showErr(3, `Preencha os campos obrigatórios do Produto #${i + 1} (Nome, NCM, Preço, Unidade, Estoque).`);
             return false;
           }
         }
@@ -773,15 +908,29 @@
       const produtos = [];
       for (let i = 0; i < prodCount; i++) {
         if (!document.getElementById('prod-' + i)) continue;
+        // Collect variations
+        const variacoes = [];
+        const vc = prodVarCount[i] || 0;
+        for (let j = 0; j < vc; j++) {
+          if (!document.getElementById(`var-${i}-${j}`)) continue;
+          variacoes.push({
+            tipo:  f[`vr_tipo_${i}_${j}`]?.value,
+            itens: (f[`vr_itens_${i}_${j}`]?.value || '').split(',').map(s => s.trim()).filter(Boolean),
+            desc:  f[`vr_desc_${i}_${j}`]?.value?.trim() || null,
+          });
+        }
         produtos.push({
           nome:      f[`p_nome_${i}`]?.value?.trim(),
-          sku:       f[`p_sku_${i}`]?.value?.trim(),
+          descricao: f[`p_descricao_${i}`]?.value?.trim() || null,
+          sku:       f[`p_sku_${i}`]?.value?.trim() || null,
           ncm:       f[`p_ncm_${i}`]?.value?.trim(),
           preco:     f[`p_preco_${i}`]?.value?.trim(),
           unidade:   f[`p_unidade_${i}`]?.value,
           estoque:   Number(f[`p_estoque_${i}`]?.value) || 0,
-          gtin:      f[`p_gtin_${i}`]?.value?.trim() || null,
-          categoria: f[`p_categoria_${i}`]?.value?.trim() || null,
+          marca:     f[`p_marca_${i}`]?.value?.trim() || null,
+          flag:      f[`p_flag_${i}`]?.value === 'sim',
+          variacao:  f[`p_variacao_${i}`]?.value === 'sim',
+          variacoes: variacoes.length > 0 ? variacoes : null,
         });
       }
 
