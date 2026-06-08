@@ -830,6 +830,8 @@
   let currentStep = 1;
   let prodCount = 0;
 
+  let _existingId = null; // ID do registro já enviado, se houver
+
   // ── Screen management
   function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -837,11 +839,54 @@
     if (el) { el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   }
 
+  // ── Vai para o formulário e verifica se empresa/loja já foram enviadas
+  async function goToForm() {
+    showScreen('form');
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return;
+    const { data } = await sb.from('habilitacoes')
+      .select('id, nome_empresa')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (data) activateReturningMode(data);
+  }
+
+  function activateReturningMode(record) {
+    _existingId = record.id;
+
+    // Banner acima do formulário
+    const banner = document.createElement('div');
+    banner.className = 'note-info';
+    banner.style.marginBottom = '28px';
+    banner.innerHTML = `<span class="ni-icon">✅</span> <span><strong style="color:#fff">${record.nome_empresa}</strong> — Empresa e loja já cadastradas. Complete ou atualize os produtos abaixo.</span>`;
+    document.getElementById('pageTitle').after(banner);
+
+    // Marca steps 1 e 2 como concluídos na barra de progresso
+    ['1','2'].forEach(n => {
+      const p = document.getElementById('prog-' + n);
+      p.classList.remove('active'); p.classList.add('done');
+      p.querySelector('.prog-num').textContent = '✓';
+    });
+    document.getElementById('line-1').classList.add('done');
+    document.getElementById('line-2').classList.add('done');
+
+    // Vai direto para o step 3
+    document.getElementById('step-1').classList.remove('active');
+    document.getElementById('step-3').classList.add('active');
+    document.getElementById('prog-3').classList.add('active');
+    currentStep = 3;
+
+    // Esconde botão "Voltar" do step 3
+    const nav3 = document.querySelector('#step-3 .form-nav');
+    const backBtn = nav3.querySelector('.btn-back');
+    if (backBtn) backBtn.style.display = 'none';
+  }
+
   // ── Check auth on load
   (async function() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
-    if (session.user.user_metadata?.termos_aceitos) showScreen('form');
+    if (session.user.user_metadata?.termos_aceitos) goToForm();
     else showScreen('terms');
   })();
 
@@ -886,7 +931,7 @@
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
     btn.disabled = false; btn.textContent = 'Entrar →';
     if (error) return authMsg('E-mail ou senha inválidos.', 'error');
-    if (data.user.user_metadata?.termos_aceitos) showScreen('form');
+    if (data.user.user_metadata?.termos_aceitos) goToForm();
     else showScreen('terms');
   }
 
@@ -905,7 +950,7 @@
       termos_aceitos: true,
       termos_aceitos_em: new Date().toISOString(),
     }});
-    showScreen('form');
+    goToForm();
   }
 
   // ── Inicializa primeiro produto
@@ -1215,6 +1260,18 @@
       }
 
       const { data: { user } } = await sb.auth.getUser();
+
+      // Modo retorno: só atualiza os produtos
+      if (_existingId) {
+        const { error } = await sb.from('habilitacoes').update({ produtos }).eq('id', _existingId);
+        if (error) throw new Error(error.message);
+        document.getElementById('habForm').style.display = 'none';
+        document.getElementById('progressWrap').style.display = 'none';
+        document.getElementById('pageTitle').style.display = 'none';
+        document.getElementById('successScreen').classList.add('show');
+        return;
+      }
+
       const { error } = await sb.from('habilitacoes').insert({
         user_id:             user?.id || null,
         nome_empresa:        f.nome_empresa.value.trim(),
