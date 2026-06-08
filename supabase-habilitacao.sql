@@ -52,12 +52,18 @@ insert into storage.buckets (id, name, public)
 values ('habilitacoes', 'habilitacoes', false)
 on conflict do nothing;
 
--- Visitantes podem fazer upload
-create policy "habilitacoes_anon_upload" on storage.objects
-  for insert to anon
+-- Remove políticas antigas se existirem
+drop policy if exists "habilitacoes_anon_upload"     on storage.objects;
+drop policy if exists "habilitacoes_auth_read_files" on storage.objects;
+drop policy if exists "habilitacoes_upload"          on storage.objects;
+drop policy if exists "habilitacoes_read"            on storage.objects;
+
+-- Upload para anon E autenticados (form usa sessão autenticada)
+create policy "habilitacoes_upload" on storage.objects
+  for insert to anon, authenticated
   with check (bucket_id = 'habilitacoes');
 
--- Apenas autenticados leem os arquivos
-create policy "habilitacoes_auth_read_files" on storage.objects
+-- Leitura apenas para autenticados
+create policy "habilitacoes_read" on storage.objects
   for select to authenticated
   using (bucket_id = 'habilitacoes');

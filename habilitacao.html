@@ -1354,7 +1354,7 @@
   // ── Upload helper
   async function uploadFile(file, path) {
     const { data, error } = await sb.storage.from('habilitacoes').upload(path, file, { upsert: true });
-    if (error) throw new Error('Erro ao enviar arquivo: ' + file.name);
+    if (error) throw new Error(`Erro ao enviar "${file.name}": ${error.message}`);
     return data.path;
   }
 
