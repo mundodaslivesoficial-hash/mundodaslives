@@ -320,26 +320,13 @@
       border: 1px solid var(--border);
       cursor: pointer;
       transition: transform .3s, box-shadow .3s;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--dark3);
     }
     .foto-card:hover { transform: scale(1.02); box-shadow: 0 20px 60px rgba(255,31,140,.2); }
     .foto-grande { min-height: 520px; }
     .foto-col .foto-card { min-height: 245px; }
-
-    .foto-placeholder {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 8px;
-      background: linear-gradient(135deg, var(--dark3), var(--dark2));
-    }
-    /* Quando tiver foto real, substitui o placeholder */
-    .foto-card img {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover;
-    }
-    .foto-card img ~ .foto-placeholder { display: none; }
-
-    .foto-label { font-size: 1rem; color: var(--muted); font-weight: 600; }
-    .foto-sub   { font-size: .8rem; color: var(--muted); opacity: .7; }
 
     .foto-overlay {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -979,33 +966,18 @@
       <p class="section-sub" style="margin:0 auto;">Estrutura real, profissional e pronta para sua marca brilhar ao vivo.</p>
     </div>
     <div class="fotos-grid">
-      <div class="foto-card foto-grande reveal">
-        <img src="images/cabines.jpeg" alt="Estúdio Mundo das Lives" />
-        <div class="foto-placeholder">
-          <span class="foto-label">📸 Foto das Cabines</span>
-          <span class="foto-sub">Estrutura profissional em operação</span>
-        </div>
+      <div class="foto-card foto-grande reveal" style="background-image: url('images/cabines.jpeg');">
         <div class="foto-overlay">
           <span class="foto-tag">🎬 Estúdio Completo</span>
         </div>
       </div>
       <div class="foto-col">
-        <div class="foto-card reveal">
-          <img src="images/empresa1.jpeg" alt="Equipe Mundo das Lives" />
-          <div class="foto-placeholder">
-            <span class="foto-label">📸 Nossa Equipe</span>
-            <span class="foto-sub">Time especializado ao vivo</span>
-          </div>
+        <div class="foto-card reveal" style="background-image: url('images/empresa1.jpeg');">
           <div class="foto-overlay">
             <span class="foto-tag">✨ Nossa Equipe</span>
           </div>
         </div>
-        <div class="foto-card reveal">
-          <img src="images/cabines.jpeg" alt="Cabine ao vivo" style="object-position: center 60%;" />
-          <div class="foto-placeholder">
-            <span class="foto-label">📸 Interior da Cabine</span>
-            <span class="foto-sub">Ring light, produtos e creator</span>
-          </div>
+        <div class="foto-card reveal" style="background-image: url('images/cabines.jpeg'); background-position: center 60%;">
           <div class="foto-overlay">
             <span class="foto-tag">🎥 Ao Vivo</span>
           </div>
