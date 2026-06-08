@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habilitação TikTok Shop – Mundo das Lives</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink:   #FF1F8C;
+      --cyan:   #00C8FF;
+      --grad:   linear-gradient(135deg, #FF1F8C, #00C8FF);
+      --dark:   #06060E;
+      --dark2:  #0D0D1A;
+      --dark3:  #141425;
+      --border: rgba(255,255,255,0.08);
+      --text:   #E8E8F4;
+      --muted:  #8080A0;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(20px);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo-text { font-size: 1.05rem; font-weight: 800; color: #fff; }
+    .logo-text span { color: var(--pink); }
+    .header-badge {
+      background: rgba(255,31,140,.1); border: 1px solid rgba(255,31,140,.28);
+      color: var(--pink); border-radius: 6px;
+      padding: 3px 10px; font-size: .7rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+    }
+    .header-secure {
+      margin-left: auto; display: flex; align-items: center; gap: 6px;
+      font-size: .75rem; color: var(--muted);
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 52px 24px 100px;
+    }
+
+    /* ── PAGE TITLE ── */
+    .page-title {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+    .page-title .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,31,140,.08); border: 1px solid rgba(255,31,140,.3);
+      color: var(--pink); border-radius: 100px;
+      padding: 5px 16px; font-size: .75rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .page-title h1 {
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      font-weight: 900; color: #fff;
+      line-height: 1.15; margin-bottom: 14px;
+    }
+    .page-title h1 span {
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-title p { color: var(--muted); font-size: .95rem; max-width: 500px; margin: 0 auto; line-height: 1.65; }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 52px;
+    }
+    .prog-step {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .prog-num {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 700;
+      border: 2px solid rgba(255,255,255,.12);
+      color: var(--muted); background: var(--dark3);
+      transition: all .3s;
+    }
+    .prog-step.active .prog-num {
+      border-color: var(--pink); color: #fff;
+      background: rgba(255,31,140,.14);
+      box-shadow: 0 0 18px rgba(255,31,140,.28);
+    }
+    .prog-step.done .prog-num {
+      border-color: var(--pink); background: var(--pink); color: #fff;
+    }
+    .prog-label {
+      font-size: .7rem; color: var(--muted); font-weight: 600;
+      text-align: center; white-space: nowrap;
+    }
+    .prog-step.active .prog-label { color: var(--text); }
+    .prog-step.done .prog-label { color: rgba(255,31,140,.8); }
+    .prog-line {
+      flex: 1; height: 2px; background: rgba(255,255,255,.08);
+      min-width: 48px; max-width: 100px;
+      margin-bottom: 22px; transition: background .3s;
+    }
+    .prog-line.done { background: var(--grad); }
+
+    /* ── CARDS ── */
+    .step-card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-icon {
+      width: 46px; height: 46px; border-radius: 13px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      background: rgba(255,31,140,.1); border: 1px solid rgba(255,31,140,.2);
+    }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: #fff; }
+    .card-sub { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── FIELDS ── */
+    .fields-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .f-full { grid-column: 1 / -1; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label { font-size: .8rem; font-weight: 600; color: rgba(255,255,255,.6); }
+    .field label .req { color: var(--pink); }
+    .field label .opt { color: rgba(255,255,255,.28); font-weight: 400; margin-left: 4px; }
+
+    .field input,
+    .field select,
+    .field textarea {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; padding: 12px 14px;
+      color: #fff; font-size: .9rem;
+      font-family: inherit; outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus { border-color: rgba(255,31,140,.5); }
+    .field input::placeholder { color: rgba(255,255,255,.22); }
+    .field select option { background: #1a1a2e; }
+
+    /* ── FILE UPLOAD ── */
+    .upload-area {
+      border: 2px dashed rgba(255,255,255,.13);
+      border-radius: 12px; padding: 22px;
+      text-align: center; cursor: pointer;
+      transition: all .2s;
+      background: rgba(255,255,255,.02);
+      position: relative;
+    }
+    .upload-area:hover { border-color: rgba(255,31,140,.4); background: rgba(255,31,140,.03); }
+    .upload-area.filled { border-color: rgba(0,200,100,.35); background: rgba(0,200,100,.03); }
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; border: none; background: none; padding: 0;
+    }
+    .upload-icon { font-size: 1.7rem; margin-bottom: 6px; }
+    .upload-text { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+    .upload-text strong { color: rgba(255,31,140,.85); }
+    .upload-text .ext { display: block; font-size: .73rem; margin-top: 4px; color: rgba(255,255,255,.25); }
+    .upload-filename { font-size: .78rem; color: #2adc7a; margin-top: 8px; font-weight: 600; display: none; }
+    .upload-area.filled .upload-filename { display: block; }
+
+    /* ── PASSWORD ── */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 46px; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: .85rem; padding: 4px;
+      transition: color .2s; line-height: 1;
+    }
+    .pw-toggle:hover { color: var(--text); }
+
+    /* ── PRODUCT ENTRY ── */
+    .prod-entry + .prod-entry {
+      margin-top: 24px; padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .prod-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .prod-label { font-size: .82rem; font-weight: 700; color: var(--pink); }
+    .btn-remove-prod {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: .8rem; font-family: inherit;
+      transition: color .2s;
+    }
+    .btn-remove-prod:hover { color: var(--pink); }
+    .btn-add-prod {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; margin-top: 20px;
+      background: transparent; border: 1px dashed rgba(255,31,140,.35);
+      color: var(--pink); border-radius: 10px; padding: 12px;
+      font-size: .85rem; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: all .2s;
+    }
+    .btn-add-prod:hover { border-color: rgba(255,31,140,.65); background: rgba(255,31,140,.04); }
+
+    /* ── INFO NOTE ── */
+    .note-info {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(0,200,255,.06); border: 1px solid rgba(0,200,255,.18);
+      border-radius: 10px; padding: 13px 16px;
+      color: rgba(0,200,255,.8); font-size: .8rem; line-height: 1.55;
+      margin-top: 20px;
+    }
+    .note-info .ni-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── ERROR ── */
+    .form-error {
+      background: rgba(255,31,140,.09); border: 1px solid rgba(255,31,140,.28);
+      border-radius: 10px; padding: 11px 15px;
+      color: var(--pink); font-size: .83rem;
+      margin-top: 16px; display: none;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .form-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-top: 8px;
+    }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 13px 22px; font-size: .88rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .btn-back:hover { border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.04); }
+    .btn-next {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--grad); color: #fff; border: none;
+      border-radius: 10px; padding: 13px 28px;
+      font-size: .9rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: all .2s;
+      box-shadow: 0 4px 20px rgba(255,31,140,.28);
+      margin-left: auto;
+    }
+    .btn-next:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-next:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    /* ── STEPS VISIBILITY ── */
+    .form-step { display: none; flex-direction: column; }
+    .form-step.active { display: flex; }
+
+    /* ── SUCCESS ── */
+    .success-screen {
+      display: none; text-align: center;
+      padding: 72px 24px 0;
+    }
+    .success-screen.show { display: block; }
+    .success-icon { font-size: 4rem; margin-bottom: 20px; }
+    .success-screen h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 900; color: #fff; margin-bottom: 14px;
+    }
+    .success-screen h2 span {
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .success-screen > p { color: var(--muted); font-size: .95rem; max-width: 440px; margin: 0 auto 36px; }
+    .success-card {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px;
+      max-width: 460px; margin: 0 auto;
+      text-align: left;
+    }
+    .success-card .sc-title { font-size: .8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 16px; }
+    .success-card .sc-item { display: flex; align-items: flex-start; gap: 10px; font-size: .88rem; color: var(--text); padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .success-card .sc-item:last-child { border-bottom: none; }
+    .success-card .sc-item .si-icon { font-size: .95rem; flex-shrink: 0; }
+
+    @media (max-width: 600px) {
+      .fields-grid { grid-template-columns: 1fr; }
+      .f-full { grid-column: 1; }
+      .step-card { padding: 20px; }
+      .container { padding: 32px 16px 80px; }
+      .prog-line { min-width: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <span class="logo-text">Mundo das Lives<span>.</span></span>
+  <span class="header-badge">TikTok Shop</span>
+  <span class="header-secure">🔒 Conexão segura</span>
+</header>
+
+<div class="container">
+
+  <div class="page-title" id="pageTitle">
+    <div class="tag">
+      <span>📋</span> Formulário de Habilitação
+    </div>
+    <h1>Habilite sua loja no<br/><span>TikTok Shop</span></h1>
+    <p>Preencha as informações abaixo em 3 etapas. Seus dados ficam protegidos e serão usados exclusivamente para o processo de habilitação da sua loja.</p>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="prog-step active" id="prog-1">
+      <div class="prog-num">1</div>
+      <span class="prog-label">Empresa</span>
+    </div>
+    <div class="prog-line" id="line-1"></div>
+    <div class="prog-step" id="prog-2">
+      <div class="prog-num">2</div>
+      <span class="prog-label">Loja</span>
+    </div>
+    <div class="prog-line" id="line-2"></div>
+    <div class="prog-step" id="prog-3">
+      <div class="prog-num">3</div>
+      <span class="prog-label">Produtos</span>
+    </div>
+  </div>
+
+  <form id="habForm" novalidate>
+
+    <!-- ═══════════════════════════════════
+         STEP 1 – Empresa & Representante
+    ════════════════════════════════════ -->
+    <div class="form-step active" id="step-1">
+
+      <!-- Card empresa -->
+      <div class="step-card">
+        <div class="card-header">
+          <div class="card-icon">🏢</div>
+          <div>
+            <div class="card-title">Informações da Empresa</div>
+            <div class="card-sub">Dados de registro para abertura da conta no TikTok Shop</div>
+          </div>
+        </div>
+        <div class="fields-grid">
+          <div class="field f-full">
+            <label>Nome da empresa <span class="req">*</span></label>
+            <input type="text" name="nome_empresa" placeholder="Razão social completa" />
+          </div>
+          <div class="field">
+            <label>CNPJ <span class="req">*</span></label>
+            <input type="text" name="cnpj" placeholder="00.000.000/0001-00" maxlength="18" id="inputCnpj" />
+          </div>
+          <div class="field">
+            <label>Data de constituição <span class="req">*</span></label>
+            <input type="date" name="data_constituicao" />
+          </div>
+          <div class="field f-full">
+            <label>Endereço comercial principal <span class="req">*</span></label>
+            <input type="text" name="endereco_comercial" placeholder="Rua, número, bairro, cidade – UF, CEP" />
+          </div>
+          <div class="field f-full">
+            <label>Comprovante de inscrição no CNPJ <span class="req">*</span></label>
+            <div class="upload-area" id="area-cnpj">
+              <input type="file" name="cnpj_doc" accept=".pdf,.jpg,.jpeg,.png" id="file-cnpj" />
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">
+                Clique para selecionar ou arraste aqui<br/>
+                <strong>PDF, JPG ou PNG</strong>
+                <span class="ext">Cartão CNPJ ou Comprovante de Inscrição Federal</span>
+              </div>
+              <div class="upload-filename" id="fn-cnpj"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card representante -->
+      <div class="step-card">
+        <div class="card-header">
+          <div class="card-icon">👤</div>
+          <div>
+            <div class="card-title">Representante Legal</div>
+            <div class="card-sub">Identificação do responsável pelo cadastro</div>
+          </div>
+        </div>
+        <div class="fields-grid">
+          <div class="field f-full">
+            <label>Nome civil completo <span class="req">*</span></label>
+            <input type="text" name="nome_representante" placeholder="Conforme documento oficial (RG/CNH)" />
+          </div>
+          <div class="field">
+            <label>Data de nascimento <span class="req">*</span></label>
+            <input type="date" name="data_nascimento" />
+          </div>
+          <div class="field">
+            <label>Nacionalidade <span class="req">*</span></label>
+            <input type="text" name="nacionalidade" placeholder="Ex: Brasileira" />
+          </div>
+          <div class="field f-full">
+            <label>Endereço residencial <span class="req">*</span></label>
+            <input type="text" name="endereco_residencial" placeholder="Rua, número, bairro, cidade – UF, CEP" />
+          </div>
+          <div class="field f-full">
+            <label>Comprovante de residência <span class="opt">(opcional)</span></label>
+            <div class="upload-area" id="area-res">
+              <input type="file" name="comp_residencia" accept=".pdf,.jpg,.jpeg,.png" id="file-res" />
+              <div class="upload-icon">🏠</div>
+              <div class="upload-text">
+                Clique para selecionar ou arraste aqui<br/>
+                <strong>PDF, JPG ou PNG</strong>
+                <span class="ext">Conta de água, luz, gás ou banco — máx. 90 dias</span>
+              </div>
+              <div class="upload-filename" id="fn-res"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-error" id="err-1"></div>
+      <div class="form-nav">
+        <button type="button" class="btn-next" onclick="goStep(2)">
+          Próximo: Dados da Loja →
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         STEP 2 – Loja
+    ════════════════════════════════════ -->
+    <div class="form-step" id="step-2">
+
+      <div class="step-card">
+        <div class="card-header">
+          <div class="card-icon">🏪</div>
+          <div>
+            <div class="card-title">Dados da Loja</div>
+            <div class="card-sub">Informações fiscais e certificado para integração</div>
+          </div>
+        </div>
+        <div class="fields-grid">
+          <div class="field f-full">
+            <label>Inscrição estadual <span class="req">*</span></label>
+            <input type="text" name="inscricao_estadual" placeholder="Número da inscrição estadual" />
+          </div>
+          <div class="field f-full">
+            <label>Certificado digital A1 (.PFX / .P12) <span class="req">*</span></label>
+            <div class="upload-area" id="area-cert">
+              <input type="file" name="certificado" accept=".pfx,.p12" id="file-cert" />
+              <div class="upload-icon">🔐</div>
+              <div class="upload-text">
+                Clique para selecionar ou arraste aqui<br/>
+                <strong>.PFX ou .P12</strong>
+                <span class="ext">Certificado A1 para emissão de notas fiscais</span>
+              </div>
+              <div class="upload-filename" id="fn-cert"></div>
+            </div>
+          </div>
+          <div class="field f-full">
+            <label>Senha do certificado digital <span class="req">*</span></label>
+            <div class="pw-wrap">
+              <input type="password" name="senha_certificado" id="pwCert" placeholder="Senha de acesso ao arquivo .PFX" />
+              <button type="button" class="pw-toggle" onclick="togglePw('pwCert', this)">👁</button>
+            </div>
+          </div>
+        </div>
+        <div class="note-info">
+          <span class="ni-icon">🔒</span>
+          Os dados são transmitidos via HTTPS e armazenados com criptografia. A senha do certificado é usada exclusivamente para habilitar sua loja no TikTok Shop e realizar a integração fiscal.
+        </div>
+      </div>
+
+      <div class="form-error" id="err-2"></div>
+      <div class="form-nav">
+        <button type="button" class="btn-back" onclick="goStep(1)">← Voltar</button>
+        <button type="button" class="btn-next" onclick="goStep(3)">Próximo: Produtos →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         STEP 3 – Produtos
+    ════════════════════════════════════ -->
+    <div class="form-step" id="step-3">
+
+      <div class="step-card">
+        <div class="card-header">
+          <div class="card-icon">📦</div>
+          <div>
+            <div class="card-title">Cadastro de Produtos</div>
+            <div class="card-sub">Campos obrigatórios para migração ao Bling</div>
+          </div>
+        </div>
+
+        <div id="prodsList">
+          <!-- Produto #1 inserido pelo JS -->
+        </div>
+
+        <button type="button" class="btn-add-prod" onclick="addProd()">
+          + Adicionar outro produto
+        </button>
+      </div>
+
+      <div class="form-error" id="err-3"></div>
+      <div class="form-nav">
+        <button type="button" class="btn-back" onclick="goStep(2)">← Voltar</button>
+        <button type="submit" class="btn-next" id="submitBtn">Enviar habilitação ✓</button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- ── SUCCESS ── -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">🚀</div>
+    <h2>Habilitação <span>enviada!</span></h2>
+    <p>Recebemos todas as informações. Nossa equipe iniciará o processo de habilitação da sua loja no TikTok Shop em breve.</p>
+    <div class="success-card">
+      <div class="sc-title">Próximos passos</div>
+      <div class="sc-item"><span class="si-icon">📋</span> Análise dos documentos enviados (1–2 dias úteis)</div>
+      <div class="sc-item"><span class="si-icon">✅</span> Habilitação da loja no TikTok Shop</div>
+      <div class="sc-item"><span class="si-icon">🔗</span> Integração com o Bling e migração dos produtos</div>
+      <div class="sc-item"><span class="si-icon">📲</span> Entraremos em contato pelo WhatsApp assim que concluído</div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://gnbxufvhqeugujwwaccn.supabase.co',
+    'sb_publishable_OJ9ZMxFyBBljk5HI-iwJ-g_J41fccPs'
+  );
+
+  let currentStep = 1;
+  let prodCount = 0;
+
+  // ── Inicializa primeiro produto
+  addProd();
+
+  // ── File upload feedback
+  function bindFile(inputId, areaId, nameId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('change', () => {
+      const area = document.getElementById(areaId);
+      const nameEl = document.getElementById(nameId);
+      if (input.files[0]) {
+        area.classList.add('filled');
+        nameEl.textContent = '✓ ' + input.files[0].name;
+      } else {
+        area.classList.remove('filled');
+        nameEl.textContent = '';
+      }
+    });
+  }
+  bindFile('file-cnpj', 'area-cnpj', 'fn-cnpj');
+  bindFile('file-res',  'area-res',  'fn-res');
+  bindFile('file-cert', 'area-cert', 'fn-cert');
+
+  // ── CNPJ mask
+  document.getElementById('inputCnpj').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '');
+    v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+    v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+    v = v.replace(/(\d{4})(\d)/, '$1-$2');
+    this.value = v;
+  });
+
+  // ── Toggle password
+  function togglePw(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+    btn.textContent = el.type === 'password' ? '👁' : '🙈';
+  }
+
+  // ── Produto template
+  function prodHTML(idx) {
+    return `
+      <div class="prod-entry" id="prod-${idx}">
+        <div class="prod-header">
+          <span class="prod-label">Produto #${idx + 1}</span>
+          ${idx > 0 ? `<button type="button" class="btn-remove-prod" onclick="removeProd(${idx})">✕ Remover</button>` : ''}
+        </div>
+        <div class="fields-grid">
+          <div class="field f-full">
+            <label>Nome / descrição do produto <span class="req">*</span></label>
+            <input type="text" name="p_nome_${idx}" placeholder="Nome completo do produto" />
+          </div>
+          <div class="field">
+            <label>Código / SKU <span class="req">*</span></label>
+            <input type="text" name="p_sku_${idx}" placeholder="Ex: PROD-001" />
+          </div>
+          <div class="field">
+            <label>NCM <span class="req">*</span></label>
+            <input type="text" name="p_ncm_${idx}" placeholder="Ex: 6203.42.00" maxlength="10" />
+          </div>
+          <div class="field">
+            <label>Preço de venda (R$) <span class="req">*</span></label>
+            <input type="text" name="p_preco_${idx}" placeholder="Ex: 89,90" />
+          </div>
+          <div class="field">
+            <label>Unidade <span class="req">*</span></label>
+            <select name="p_unidade_${idx}">
+              <option value="" disabled selected>Selecione</option>
+              <option value="UN">UN – Unidade</option>
+              <option value="PC">PC – Peça</option>
+              <option value="KG">KG – Quilograma</option>
+              <option value="MT">MT – Metro</option>
+              <option value="CX">CX – Caixa</option>
+              <option value="PAR">PAR – Par</option>
+              <option value="KIT">KIT – Kit</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Estoque atual <span class="req">*</span></label>
+            <input type="number" name="p_estoque_${idx}" placeholder="Ex: 50" min="0" />
+          </div>
+          <div class="field">
+            <label>GTIN / EAN (código de barras) <span class="opt">(se tiver)</span></label>
+            <input type="text" name="p_gtin_${idx}" placeholder="Ex: 7891234567890" maxlength="14" />
+          </div>
+          <div class="field">
+            <label>Categoria</label>
+            <input type="text" name="p_categoria_${idx}" placeholder="Ex: Moda Feminina" />
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function addProd() {
+    document.getElementById('prodsList').insertAdjacentHTML('beforeend', prodHTML(prodCount));
+    prodCount++;
+  }
+
+  function removeProd(idx) {
+    const el = document.getElementById('prod-' + idx);
+    if (el) el.remove();
+  }
+
+  // ── Errors
+  function showErr(step, msg) {
+    const el = document.getElementById('err-' + step);
+    el.textContent = msg; el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function clearErr(step) {
+    const el = document.getElementById('err-' + step);
+    if (el) { el.style.display = 'none'; el.textContent = ''; }
+  }
+
+  // ── Validation
+  function validate(step) {
+    const f = document.getElementById('habForm');
+    if (step === 1) {
+      const required = ['nome_empresa', 'cnpj', 'data_constituicao', 'endereco_comercial',
+                        'nome_representante', 'data_nascimento', 'nacionalidade', 'endereco_residencial'];
+      for (const n of required) {
+        if (!f[n] || !f[n].value.trim()) {
+          showErr(1, 'Preencha todos os campos obrigatórios antes de continuar.');
+          return false;
+        }
+      }
+      if (!f['cnpj_doc'] || !f['cnpj_doc'].files[0]) {
+        showErr(1, 'Anexe o comprovante de inscrição no CNPJ.');
+        return false;
+      }
+    }
+    if (step === 2) {
+      if (!f['inscricao_estadual'] || !f['inscricao_estadual'].value.trim()) {
+        showErr(2, 'Informe a inscrição estadual.'); return false;
+      }
+      if (!f['certificado'] || !f['certificado'].files[0]) {
+        showErr(2, 'Anexe o certificado digital (.PFX ou .P12).'); return false;
+      }
+      if (!f['senha_certificado'] || !f['senha_certificado'].value.trim()) {
+        showErr(2, 'Informe a senha do certificado.'); return false;
+      }
+    }
+    if (step === 3) {
+      for (let i = 0; i < prodCount; i++) {
+        if (!document.getElementById('prod-' + i)) continue;
+        const fields = [`p_nome_${i}`, `p_sku_${i}`, `p_ncm_${i}`, `p_preco_${i}`, `p_unidade_${i}`, `p_estoque_${i}`];
+        for (const n of fields) {
+          if (!f[n] || !f[n].value.toString().trim()) {
+            showErr(3, `Preencha todos os campos obrigatórios do Produto #${i + 1}.`);
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  // ── Step navigation
+  function goStep(target) {
+    if (target > currentStep && !validate(currentStep)) return;
+    clearErr(currentStep);
+
+    const from = currentStep;
+    document.getElementById('step-' + from).classList.remove('active');
+    document.getElementById('prog-' + from).classList.remove('active');
+    if (target > from) {
+      document.getElementById('prog-' + from).classList.add('done');
+      document.getElementById('prog-' + from).querySelector('.prog-num').textContent = '✓';
+      if (from < 3) document.getElementById('line-' + from).classList.add('done');
+    } else {
+      document.getElementById('prog-' + from).classList.remove('done');
+      document.getElementById('prog-' + from).querySelector('.prog-num').textContent = from;
+      if (from <= 3 && from > 1) document.getElementById('line-' + (from - 1)).classList.remove('done');
+    }
+
+    currentStep = target;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    document.getElementById('prog-' + currentStep).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Upload helper
+  async function uploadFile(file, path) {
+    const { data, error } = await sb.storage.from('habilitacoes').upload(path, file, { upsert: true });
+    if (error) throw new Error('Erro ao enviar arquivo: ' + file.name);
+    return data.path;
+  }
+
+  // ── Submit
+  document.getElementById('habForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate(3)) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    const f = e.target;
+    const slug = (f.cnpj.value.replace(/\D/g, '').slice(0, 8) || 'emp') + '-' + Date.now();
+
+    try {
+      const cnpjFile  = f['cnpj_doc'].files[0];
+      const certFile  = f['certificado'].files[0];
+      const resFile   = f['comp_residencia'].files[0] || null;
+
+      const [cnpjPath, certPath, resPath] = await Promise.all([
+        uploadFile(cnpjFile, `${slug}/cnpj.${cnpjFile.name.split('.').pop()}`),
+        uploadFile(certFile, `${slug}/certificado.${certFile.name.split('.').pop()}`),
+        resFile ? uploadFile(resFile, `${slug}/residencia.${resFile.name.split('.').pop()}`) : Promise.resolve(null),
+      ]);
+
+      // Collect products
+      const produtos = [];
+      for (let i = 0; i < prodCount; i++) {
+        if (!document.getElementById('prod-' + i)) continue;
+        produtos.push({
+          nome:      f[`p_nome_${i}`]?.value?.trim(),
+          sku:       f[`p_sku_${i}`]?.value?.trim(),
+          ncm:       f[`p_ncm_${i}`]?.value?.trim(),
+          preco:     f[`p_preco_${i}`]?.value?.trim(),
+          unidade:   f[`p_unidade_${i}`]?.value,
+          estoque:   Number(f[`p_estoque_${i}`]?.value) || 0,
+          gtin:      f[`p_gtin_${i}`]?.value?.trim() || null,
+          categoria: f[`p_categoria_${i}`]?.value?.trim() || null,
+        });
+      }
+
+      const { error } = await sb.from('habilitacoes').insert({
+        nome_empresa:        f.nome_empresa.value.trim(),
+        cnpj:                f.cnpj.value.trim(),
+        data_constituicao:   f.data_constituicao.value,
+        endereco_comercial:  f.endereco_comercial.value.trim(),
+        cnpj_doc_path:       cnpjPath,
+        nome_representante:  f.nome_representante.value.trim(),
+        data_nascimento:     f.data_nascimento.value,
+        nacionalidade:       f.nacionalidade.value.trim(),
+        endereco_residencial: f.endereco_residencial.value.trim(),
+        comp_residencia_path: resPath,
+        inscricao_estadual:  f.inscricao_estadual.value.trim(),
+        certificado_path:    certPath,
+        senha_certificado:   f.senha_certificado.value,
+        produtos:            produtos,
+      });
+
+      if (error) throw new Error(error.message);
+
+      // Show success
+      document.getElementById('habForm').style.display = 'none';
+      document.getElementById('progressWrap').style.display = 'none';
+      document.getElementById('pageTitle').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+
+    } catch (err) {
+      showErr(3, err.message || 'Erro ao enviar. Tente novamente.');
+      btn.disabled = false;
+      btn.textContent = 'Enviar habilitação ✓';
+    }
+  });
+</script>
+</body>
+</html>
