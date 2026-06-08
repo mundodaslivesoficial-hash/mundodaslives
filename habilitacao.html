@@ -371,6 +371,76 @@
     }
     .var-header span { font-size: .72rem; color: var(--muted); font-weight: 600; padding: 0 2px; }
 
+    /* ── SCREENS ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── AUTH CARD ── */
+    .auth-wrap { text-align: center; margin-bottom: 36px; }
+    .auth-card {
+      max-width: 440px; margin: 0 auto;
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px 32px;
+    }
+    .auth-tabs {
+      display: flex; gap: 0;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      border-radius: 10px; padding: 4px; margin-bottom: 28px;
+    }
+    .auth-tab {
+      flex: 1; padding: 9px 16px;
+      border: 1px solid transparent; border-radius: 8px;
+      background: none; color: var(--muted);
+      font-size: .875rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .auth-tab.active { background: rgba(255,31,140,.15); border-color: rgba(255,31,140,.35); color: var(--pink); }
+    .auth-fields { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+    .auth-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; margin-top: 6px;
+      background: var(--grad); color: #fff; border: none;
+      border-radius: 10px; padding: 14px;
+      font-size: .95rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: all .2s;
+      box-shadow: 0 4px 20px rgba(255,31,140,.28);
+    }
+    .auth-btn:hover { opacity: .88; transform: translateY(-1px); }
+    .auth-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+    .auth-msg {
+      font-size: .82rem; margin-top: 14px; padding: 10px 14px;
+      border-radius: 8px; display: none; text-align: center;
+    }
+    .auth-msg.error  { background: rgba(255,31,140,.1); border: 1px solid rgba(255,31,140,.28); color: var(--pink); display: block; }
+    .auth-msg.ok     { background: rgba(0,200,100,.1);  border: 1px solid rgba(0,200,100,.28);  color: #2adc7a;    display: block; }
+
+    /* ── TERMS ── */
+    .terms-card { max-width: 700px; margin: 0 auto; }
+    .terms-intro { text-align: center; margin-bottom: 32px; }
+    .terms-intro h2 { font-size: clamp(1.4rem,3vw,2rem); font-weight: 900; color: #fff; margin-bottom: 10px; }
+    .terms-intro p  { color: var(--muted); font-size: .9rem; max-width: 480px; margin: 0 auto; }
+    .terms-box {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+      max-height: 340px; overflow-y: auto; margin-bottom: 22px;
+    }
+    .terms-box::-webkit-scrollbar { width: 4px; }
+    .terms-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+    .terms-section { margin-bottom: 22px; }
+    .terms-section:last-child { margin-bottom: 0; }
+    .terms-section h4 { font-size: .8rem; font-weight: 700; color: var(--pink); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .06em; }
+    .terms-section p  { font-size: .82rem; color: rgba(255,255,255,.6); line-height: 1.7; }
+    .terms-checks { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .terms-check-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: rgba(255,255,255,.03); border: 1px solid var(--border);
+      border-radius: 12px; padding: 15px 16px; cursor: pointer; transition: all .2s;
+    }
+    .terms-check-item:has(input:checked) { border-color: rgba(255,31,140,.35); background: rgba(255,31,140,.04); }
+    .terms-check-item input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--pink); cursor: pointer; }
+    .chk-text { font-size: .84rem; color: rgba(255,255,255,.75); line-height: 1.5; }
+    .chk-text strong { color: #fff; display: block; margin-bottom: 3px; font-size: .86rem; }
+
     @media (max-width: 600px) {
       .fields-grid { grid-template-columns: 1fr; }
       .f-full { grid-column: 1; }
@@ -380,6 +450,7 @@
       .var-row { grid-template-columns: 1fr 1fr; }
       .var-row select { grid-column: 1 / -1; }
       .var-header { display: none; }
+      .auth-card { padding: 24px 20px; }
     }
   </style>
 </head>
@@ -392,6 +463,135 @@
 </header>
 
 <div class="container">
+
+  <!-- ═══════════════════════════════════
+       SCREEN 1 — AUTENTICAÇÃO
+  ════════════════════════════════════ -->
+  <div id="screen-auth" class="screen active">
+    <div class="auth-wrap">
+      <div class="tag" style="margin-bottom:18px;"><span>🔐</span> Acesso seguro</div>
+      <h1 style="font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;color:#fff;margin-bottom:10px;">
+        Portal de <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Habilitação</span>
+      </h1>
+      <p style="color:var(--muted);font-size:.9rem;max-width:400px;margin:0 auto;line-height:1.6;">
+        Crie seu acesso ou entre com suas credenciais para iniciar o processo de habilitação da sua loja no TikTok Shop.
+      </p>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-register" onclick="switchAuthTab('register')">Criar acesso</button>
+        <button class="auth-tab" id="tab-login" onclick="switchAuthTab('login')">Já tenho acesso</button>
+      </div>
+      <!-- Criar conta -->
+      <div id="auth-register-form" class="auth-fields">
+        <div class="field">
+          <label>E-mail <span class="req">*</span></label>
+          <input type="email" id="reg-email" placeholder="seu@email.com" />
+        </div>
+        <div class="field">
+          <label>Senha <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-pw" placeholder="Mínimo 8 caracteres" />
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-pw',this)">👁</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirmar senha <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-pw2" placeholder="Repita a senha" />
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-pw2',this)">👁</button>
+          </div>
+        </div>
+        <button class="auth-btn" id="btn-register" onclick="doRegister()">Criar meu acesso →</button>
+      </div>
+      <!-- Login -->
+      <div id="auth-login-form" class="auth-fields" style="display:none;">
+        <div class="field">
+          <label>E-mail <span class="req">*</span></label>
+          <input type="email" id="login-email" placeholder="seu@email.com" />
+        </div>
+        <div class="field">
+          <label>Senha <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="login-pw" placeholder="Sua senha" />
+            <button type="button" class="pw-toggle" onclick="togglePw('login-pw',this)">👁</button>
+          </div>
+        </div>
+        <button class="auth-btn" id="btn-login" onclick="doLogin()">Entrar →</button>
+      </div>
+      <div class="auth-msg" id="auth-msg"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 2 — TERMOS
+  ════════════════════════════════════ -->
+  <div id="screen-terms" class="screen">
+    <div class="terms-card">
+      <div class="terms-intro">
+        <div class="tag" style="margin-bottom:16px;"><span>📝</span> Termos e condições</div>
+        <h2>Antes de continuar,<br/>leia e aceite os termos</h2>
+        <p>Para prosseguir com a habilitação da sua loja, é necessário que você leia e concorde com todos os termos abaixo.</p>
+      </div>
+      <div class="terms-box">
+        <div class="terms-section">
+          <h4>1. Coleta e uso de dados — LGPD</h4>
+          <p>A <strong style="color:var(--text)">Mundo das Lives</strong> coleta as informações e documentos fornecidos neste formulário exclusivamente para fins de habilitação e configuração da sua loja no TikTok Shop e integração com sistemas de gestão (Bling). Os dados são armazenados com criptografia e protegidos conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 – LGPD). Nenhuma informação será compartilhada com terceiros sem consentimento prévio e expresso do titular.</p>
+        </div>
+        <div class="terms-section">
+          <h4>2. Segurança das credenciais de acesso</h4>
+          <p>As credenciais fornecidas neste processo — incluindo certificado digital e senha — são utilizadas exclusivamente para a habilitação da loja no TikTok Shop. A Mundo das Lives <strong style="color:var(--text)">não reterá qualquer acesso</strong> às contas e sistemas do cliente após a conclusão do processo. Após a habilitação, o cliente poderá e deverá atualizar todas as suas credenciais de acesso.</p>
+        </div>
+        <div class="terms-section">
+          <h4>3. Autorização de uso de imagem e marca</h4>
+          <p>O cliente autoriza a Mundo das Lives a utilizar o nome comercial, logotipo e marca da empresa para divulgação em materiais de marketing, cases de sucesso, redes sociais, apresentações e comunicação institucional, de forma gratuita e sem limitação de prazo, podendo revogar esta autorização mediante solicitação escrita.</p>
+        </div>
+        <div class="terms-section">
+          <h4>4. Divulgação do relacionamento comercial</h4>
+          <p>O cliente autoriza a Mundo das Lives a mencionar o relacionamento comercial firmado entre as partes para fins de portfólio, prospecção de novos clientes e ações de marketing, respeitando o sigilo sobre informações comercialmente sensíveis e valores contratuais, que não serão divulgados sem autorização expressa.</p>
+        </div>
+        <div class="terms-section">
+          <h4>5. Veracidade das informações</h4>
+          <p>O cliente declara que todas as informações, documentos e arquivos fornecidos neste formulário são verídicos, atualizados e de sua responsabilidade. A Mundo das Lives não se responsabiliza por erros ou omissões causados por informações incorretas fornecidas pelo cliente.</p>
+        </div>
+      </div>
+      <div class="terms-checks">
+        <label class="terms-check-item">
+          <input type="checkbox" id="chk-lgpd" />
+          <div class="chk-text">
+            <strong>Privacidade e segurança da informação (LGPD)</strong>
+            Li e aceito os termos de coleta, armazenamento e uso dos meus dados conforme a LGPD. Estou ciente de que as credenciais fornecidas não serão retidas após a conclusão da habilitação.
+          </div>
+        </label>
+        <label class="terms-check-item">
+          <input type="checkbox" id="chk-imagem" />
+          <div class="chk-text">
+            <strong>Uso de imagem e marca</strong>
+            Autorizo a Mundo das Lives a utilizar o nome, logotipo e marca da minha empresa em materiais de marketing e comunicação institucional.
+          </div>
+        </label>
+        <label class="terms-check-item">
+          <input type="checkbox" id="chk-marketing" />
+          <div class="chk-text">
+            <strong>Divulgação do relacionamento comercial</strong>
+            Autorizo a Mundo das Lives a mencionar o relacionamento comercial entre as partes para fins de portfólio e marketing, preservando informações comercialmente sensíveis.
+          </div>
+        </label>
+      </div>
+      <div class="form-error" id="err-terms" style="margin-bottom:16px;"></div>
+      <button class="btn-next" style="width:100%;justify-content:center;" onclick="acceptTerms()">
+        Aceitar termos e iniciar habilitação →
+      </button>
+      <p style="text-align:center;font-size:.73rem;color:var(--muted);margin-top:12px;">
+        Ao aceitar, a data e hora do seu aceite são registradas automaticamente.
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 3 — FORMULÁRIO
+  ════════════════════════════════════ -->
+  <div id="screen-form" class="screen">
 
   <div class="page-title" id="pageTitle">
     <div class="tag">
@@ -616,6 +816,8 @@
     </div>
   </div>
 
+  </div><!-- /screen-form -->
+
 </div><!-- /container -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -627,6 +829,84 @@
 
   let currentStep = 1;
   let prodCount = 0;
+
+  // ── Screen management
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + name);
+    if (el) { el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+
+  // ── Check auth on load
+  (async function() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    if (session.user.user_metadata?.termos_aceitos) showScreen('form');
+    else showScreen('terms');
+  })();
+
+  // ── Auth tab switch
+  function switchAuthTab(tab) {
+    document.getElementById('auth-register-form').style.display = tab === 'register' ? 'flex' : 'none';
+    document.getElementById('auth-login-form').style.display    = tab === 'login'    ? 'flex' : 'none';
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('auth-msg').className = 'auth-msg';
+  }
+
+  function authMsg(msg, type) {
+    const el = document.getElementById('auth-msg');
+    el.textContent = msg; el.className = 'auth-msg ' + type;
+  }
+
+  // ── Register
+  async function doRegister() {
+    const email = document.getElementById('reg-email').value.trim();
+    const pw    = document.getElementById('reg-pw').value;
+    const pw2   = document.getElementById('reg-pw2').value;
+    if (!email || !pw)      return authMsg('Preencha e-mail e senha.', 'error');
+    if (pw.length < 8)      return authMsg('A senha deve ter no mínimo 8 caracteres.', 'error');
+    if (pw !== pw2)         return authMsg('As senhas não coincidem.', 'error');
+    const btn = document.getElementById('btn-register');
+    btn.disabled = true; btn.textContent = 'Criando...';
+    const { data, error } = await sb.auth.signUp({ email, password: pw });
+    btn.disabled = false; btn.textContent = 'Criar meu acesso →';
+    if (error) return authMsg(error.message, 'error');
+    if (data.session) showScreen('terms');
+    else authMsg('Verifique seu e-mail para confirmar o cadastro e volte para entrar.', 'ok');
+  }
+
+  // ── Login
+  async function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pw    = document.getElementById('login-pw').value;
+    if (!email || !pw) return authMsg('Preencha e-mail e senha.', 'error');
+    const btn = document.getElementById('btn-login');
+    btn.disabled = true; btn.textContent = 'Entrando...';
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+    btn.disabled = false; btn.textContent = 'Entrar →';
+    if (error) return authMsg('E-mail ou senha inválidos.', 'error');
+    if (data.user.user_metadata?.termos_aceitos) showScreen('form');
+    else showScreen('terms');
+  }
+
+  // ── Accept terms
+  async function acceptTerms() {
+    const lgpd = document.getElementById('chk-lgpd').checked;
+    const img  = document.getElementById('chk-imagem').checked;
+    const mkt  = document.getElementById('chk-marketing').checked;
+    const errEl = document.getElementById('err-terms');
+    if (!lgpd || !img || !mkt) {
+      errEl.textContent = 'Aceite todos os termos para continuar.';
+      errEl.style.display = 'block'; return;
+    }
+    errEl.style.display = 'none';
+    await sb.auth.updateUser({ data: {
+      termos_aceitos: true,
+      termos_aceitos_em: new Date().toISOString(),
+    }});
+    showScreen('form');
+  }
 
   // ── Inicializa primeiro produto
   addProd();
@@ -934,7 +1214,9 @@
         });
       }
 
+      const { data: { user } } = await sb.auth.getUser();
       const { error } = await sb.from('habilitacoes').insert({
+        user_id:             user?.id || null,
         nome_empresa:        f.nome_empresa.value.trim(),
         cnpj:                f.cnpj.value.trim(),
         data_constituicao:   f.data_constituicao.value,
