@@ -19,9 +19,12 @@ create table if not exists habilitacoes (
   comp_residencia_path  text,
 
   -- Bloco 2: Loja
-  inscricao_estadual   text not null,
-  certificado_path     text,
-  senha_certificado    text,
+  inscricao_estadual    text not null,
+  doc_frente_path       text,
+  selfie_titular_path   text,
+  selfie_com_doc_path   text,
+  certificado_path      text,
+  senha_certificado     text,
 
   -- Bloco 3: Produtos (JSON array)
   produtos             jsonb,
@@ -32,6 +35,11 @@ create table if not exists habilitacoes (
 );
 
 alter table habilitacoes enable row level security;
+
+-- Migração: adiciona colunas de documentos de identidade (ignorar se já existirem)
+alter table habilitacoes add column if not exists doc_frente_path      text;
+alter table habilitacoes add column if not exists selfie_titular_path  text;
+alter table habilitacoes add column if not exists selfie_com_doc_path  text;
 
 -- Visitantes podem inserir (formulário público)
 create policy "habilitacoes_anon_insert" on habilitacoes

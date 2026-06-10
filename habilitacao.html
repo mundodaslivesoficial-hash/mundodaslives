@@ -795,6 +795,45 @@
             <input type="text" name="subnicho" placeholder="Ex: Moda Feminina, Skincare" />
           </div>
           <div class="field f-full">
+            <label>Documento de identidade – Parte da frente <span class="req">*</span></label>
+            <div class="upload-area" id="area-doc-frente">
+              <input type="file" name="doc_frente" accept=".jpg,.jpeg,.png" id="file-doc-frente" />
+              <div class="upload-icon">🪪</div>
+              <div class="upload-text">
+                Clique para selecionar ou arraste aqui<br/>
+                <strong>JPG ou PNG</strong>
+                <span class="ext">Frente do RG, CNH ou outro documento oficial</span>
+              </div>
+              <div class="upload-filename" id="fn-doc-frente"></div>
+            </div>
+          </div>
+          <div class="field f-full">
+            <label>Selfie do titular da identidade <span class="req">*</span></label>
+            <div class="upload-area" id="area-selfie-titular">
+              <input type="file" name="selfie_titular" accept=".jpg,.jpeg,.png" id="file-selfie-titular" />
+              <div class="upload-icon">🤳</div>
+              <div class="upload-text">
+                Clique para selecionar ou arraste aqui<br/>
+                <strong>JPG ou PNG</strong>
+                <span class="ext">Selfie recente do representante legal</span>
+              </div>
+              <div class="upload-filename" id="fn-selfie-titular"></div>
+            </div>
+          </div>
+          <div class="field f-full">
+            <label>Foto do titular com o documento <span class="req">*</span></label>
+            <div class="upload-area" id="area-selfie-doc">
+              <input type="file" name="selfie_com_doc" accept=".jpg,.jpeg,.png" id="file-selfie-doc" />
+              <div class="upload-icon">📸</div>
+              <div class="upload-text">
+                Clique para selecionar ou arraste aqui<br/>
+                <strong>JPG ou PNG</strong>
+                <span class="ext">Foto segurando o documento ao lado do rosto</span>
+              </div>
+              <div class="upload-filename" id="fn-selfie-doc"></div>
+            </div>
+          </div>
+          <div class="field f-full">
             <label>Certificado digital A1 (.PFX / .P12) <span class="req">*</span></label>
             <div class="upload-area" id="area-cert">
               <input type="file" name="certificado" accept=".pfx,.p12" id="file-cert" />
@@ -1030,9 +1069,12 @@
       }
     });
   }
-  bindFile('file-cnpj', 'area-cnpj', 'fn-cnpj');
-  bindFile('file-res',  'area-res',  'fn-res');
-  bindFile('file-cert', 'area-cert', 'fn-cert');
+  bindFile('file-cnpj',           'area-cnpj',           'fn-cnpj');
+  bindFile('file-res',            'area-res',            'fn-res');
+  bindFile('file-doc-frente',     'area-doc-frente',     'fn-doc-frente');
+  bindFile('file-selfie-titular', 'area-selfie-titular', 'fn-selfie-titular');
+  bindFile('file-selfie-doc',     'area-selfie-doc',     'fn-selfie-doc');
+  bindFile('file-cert',           'area-cert',           'fn-cert');
 
   // ── CNPJ mask
   document.getElementById('inputCnpj').addEventListener('input', function () {
@@ -1316,6 +1358,15 @@
       if (!f['inscricao_estadual'] || !f['inscricao_estadual'].value.trim()) {
         showErr(2, 'Informe a inscrição estadual.'); return false;
       }
+      if (!f['doc_frente'] || !f['doc_frente'].files[0]) {
+        showErr(2, 'Anexe a frente do documento de identidade.'); return false;
+      }
+      if (!f['selfie_titular'] || !f['selfie_titular'].files[0]) {
+        showErr(2, 'Anexe a selfie do titular da identidade.'); return false;
+      }
+      if (!f['selfie_com_doc'] || !f['selfie_com_doc'].files[0]) {
+        showErr(2, 'Anexe a foto do titular segurando o documento.'); return false;
+      }
       if (!f['certificado'] || !f['certificado'].files[0]) {
         showErr(2, 'Anexe o certificado digital (.PFX ou .P12).'); return false;
       }
@@ -1382,14 +1433,20 @@
     const slug = (f.cnpj.value.replace(/\D/g, '').slice(0, 8) || 'emp') + '-' + Date.now();
 
     try {
-      const cnpjFile  = f['cnpj_doc'].files[0];
-      const certFile  = f['certificado'].files[0];
-      const resFile   = f['comp_residencia'].files[0] || null;
+      const cnpjFile          = f['cnpj_doc'].files[0];
+      const certFile          = f['certificado'].files[0];
+      const resFile           = f['comp_residencia'].files[0] || null;
+      const docFrenteFile     = f['doc_frente'].files[0];
+      const selfieTitularFile = f['selfie_titular'].files[0];
+      const selfieDocFile     = f['selfie_com_doc'].files[0];
 
-      const [cnpjPath, certPath, resPath] = await Promise.all([
+      const [cnpjPath, certPath, resPath, docFrentePath, selfieTitularPath, selfieDocPath] = await Promise.all([
         uploadFile(cnpjFile, `${slug}/cnpj.${cnpjFile.name.split('.').pop()}`),
         uploadFile(certFile, `${slug}/certificado.${certFile.name.split('.').pop()}`),
         resFile ? uploadFile(resFile, `${slug}/residencia.${resFile.name.split('.').pop()}`) : Promise.resolve(null),
+        uploadFile(docFrenteFile, `${slug}/doc-frente.${docFrenteFile.name.split('.').pop()}`),
+        uploadFile(selfieTitularFile, `${slug}/selfie-titular.${selfieTitularFile.name.split('.').pop()}`),
+        uploadFile(selfieDocFile, `${slug}/selfie-doc.${selfieDocFile.name.split('.').pop()}`),
       ]);
 
       // Collect products
@@ -1471,9 +1528,12 @@
         nacionalidade:       f.nacionalidade.value.trim(),
         endereco_residencial: f.endereco_residencial.value.trim(),
         comp_residencia_path: resPath,
-        inscricao_estadual:  f.inscricao_estadual.value.trim(),
-        certificado_path:    certPath,
-        senha_certificado:   f.senha_certificado.value,
+        inscricao_estadual:   f.inscricao_estadual.value.trim(),
+        doc_frente_path:      docFrentePath,
+        selfie_titular_path:  selfieTitularPath,
+        selfie_com_doc_path:  selfieDocPath,
+        certificado_path:     certPath,
+        senha_certificado:    f.senha_certificado.value,
         produtos:            produtos,
       });
 
