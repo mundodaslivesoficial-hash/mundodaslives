@@ -42,14 +42,17 @@ alter table habilitacoes add column if not exists selfie_titular_path  text;
 alter table habilitacoes add column if not exists selfie_com_doc_path  text;
 
 -- Visitantes podem inserir (formulário público)
+drop policy if exists "habilitacoes_anon_insert" on habilitacoes;
 create policy "habilitacoes_anon_insert" on habilitacoes
   for insert to anon with check (true);
 
 -- Usuário lê apenas seu próprio registro (para detecção de retorno)
+drop policy if exists "habilitacoes_auth_read" on habilitacoes;
 create policy "habilitacoes_auth_read" on habilitacoes
   for select to authenticated using (user_id = auth.uid());
 
 -- Usuário pode atualizar apenas seu próprio registro (ex: produtos)
+drop policy if exists "habilitacoes_auth_update" on habilitacoes;
 create policy "habilitacoes_auth_update" on habilitacoes
   for update to authenticated using (user_id = auth.uid());
 
